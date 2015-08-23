@@ -1,0 +1,4 @@
+# id, sprite, right, up, left, down
+a,grass,b,b,b,b
+b,stone,a,a,a,a
+start,fountain,a,a,a,a
