@@ -4,6 +4,7 @@ using System.Collections;
 public class Tile : MonoBehaviour {
 
   public Beast beast;
+  public SpriteRenderer inner;
 
   public void Render(Beast center) {
     Beast current = center;
@@ -32,5 +33,10 @@ public class Tile : MonoBehaviour {
     }
 
     this.GetComponent<SpriteRenderer>().sprite = current.sprite;
+    if (current.inner != current) {
+      this.inner.sprite = current.inner.sprite;
+    } else {
+      this.inner.sprite = null;
+    }
   }
 }

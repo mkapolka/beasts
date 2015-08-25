@@ -38,6 +38,6 @@ class Beast(object):
 
     def clone(self, id_append=None):
         b = Beast(self.symbol)
-        b.__dict__ = dict(i for i in self.__dict__.items())
+        b.__dict__ = dict((k, v) if v != self else (k, b) for (k, v) in self.__dict__.items())
         b.id += id_append or uuid.uuid4().hex
         return b

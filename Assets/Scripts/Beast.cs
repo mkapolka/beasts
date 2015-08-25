@@ -47,6 +47,12 @@ public class Beast {
         case "inner":
           this.beast.inner = v;
         break;
+        case "all":
+          this.beast.left = v;
+          this.beast.right = v;
+          this.beast.up = v;
+          this.beast.down = v;
+        break;
         case "self":
           throw new System.Exception("Can't tut ema.");
       }
@@ -67,6 +73,28 @@ public class Beast {
         default:
           return this.beast;
       }
+    }
+
+    public BeastLink invert() {
+      BeastLink output = new BeastLink(this.get(), "");
+      switch (this.direction) {
+        case "up":
+          output.direction = "down";
+        break;
+        case "down":
+          output.direction = "up";
+        break;
+        case "left":
+          output.direction = "right";
+        break;
+        case "right":
+          output.direction = "left";
+        break;
+        case "inner":
+          output.direction = "inner";
+        break;
+      }
+      return output;
     }
   }
 
@@ -118,6 +146,18 @@ public class Beast {
         from_name.set(a);
       break;
 
+      case "heen": //heen wo woro = my wo becomes woro, woro's wo becomes ema
+        // Reciprocal tut, tut back & clear previous
+        to_name = this.ParseRelative(parts[1]);
+        from_name = this.ParseRelative(parts[2]);
+        // Clear the old link
+        to_name.invert().set(to_name.get());
+        to_name.set(from_name.get());
+        // Create reciprocal link
+        BeastLink from_to = to_name.invert();
+        from_to.set(to_name.beast);
+      break;
+
       case "suj":
         Beast to = this.ParseRelative(parts[1]).get();
         Beast from = this.ParseRelative(parts[2]).get();
@@ -126,6 +166,18 @@ public class Beast {
         to.left = from.left;
         to.right = from.right;
         to.inner = from.inner;
+      break;
+
+      case "bib":
+      case "ibi":
+        a = this.ParseRelative(parts[1]).get();
+        Beast b = this.ParseRelative(parts[2]).get();
+        if (command == "ibi" ? a == b : a != b) {
+          List<string> remaining = new List<string>(parts);
+          remaining.RemoveRange(0, 3);
+          string rest = string.Join(" ", remaining.ToArray());
+          this.SingPhrase(rest);
+        }
       break;
 
       case "sujux":
@@ -147,21 +199,22 @@ public class Beast {
         from.right = tor;
         from.inner = toi;
       break;
-
-      case "zul":
-        Beast.BeastLink student = this.ParseRelative(parts[1]);
-        List<string> remaining = new List<string>(parts);
-        remaining.RemoveRange(0, 2);
-        string to_teach = string.Join(" ", remaining.ToArray());
-        student.get().song = to_teach;
-      break;
     }
   }
 
   public void Sing(string song) {
-    string[] phrases = song.Split(',');
-    foreach (string phrase in phrases) {
-      this.SingPhrase(phrase);
+    string[] parts = song.Split(' ');
+    if (parts[0] == "qub") {
+      Beast.BeastLink student = this.ParseRelative(parts[1]);
+      List<string> remaining = new List<string>(parts);
+      remaining.RemoveRange(0, 2);
+      string to_teach = string.Join(" ", remaining.ToArray());
+      student.get().song = to_teach;
+    } else {
+      string[] phrases = song.Split(',');
+      foreach (string phrase in phrases) {
+         this.SingPhrase(phrase);
+      }
     }
   }
 

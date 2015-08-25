@@ -189,20 +189,23 @@ def calc_stitch_string(beast, string, all_beasts):
             'd': current.orig_down,
             'r': current.orig_right,
             'l': current.orig_left,
+            'i': current.inner,
             's': current
         }[direction]
     return current
 
 
-def stitch(beast, all_beasts, up_string='', down_string='', left_string='', right_string=''):
+def stitch(beast, all_beasts, up_string='', down_string='', left_string='', right_string='', inner_string=''):
     up = calc_stitch_string(beast, up_string, all_beasts) if up_string else beast.up
     down = calc_stitch_string(beast, down_string, all_beasts) if down_string else beast.down
     left = calc_stitch_string(beast, left_string, all_beasts) if left_string else beast.left
     right = calc_stitch_string(beast, right_string, all_beasts) if right_string else beast.right
+    inner = calc_stitch_string(beast, inner_string, all_beasts) if inner_string else beast.inner
     beast.up = up
     beast.down = down
     beast.left = left
     beast.right = right
+    beast.inner = inner
 
 
 def generate(maps):
@@ -240,7 +243,7 @@ def generate(maps):
             wall.up = wall
     for stitched in customs['stitched']:
         stitches = stitched.stitches
-        stitch(stitched, all_beasts, stitches.get('up', ''), stitches.get('down', ''), stitches.get('left', ''), stitches.get('right', ''))
+        stitch(stitched, all_beasts, stitches.get('up', ''), stitches.get('down', ''), stitches.get('left', ''), stitches.get('right', ''), stitches.get('inner', ''))
 
     return all_beasts.values()
 
@@ -250,6 +253,6 @@ if __name__ == "__main__":
     outfile = open('output.txt', 'w')
     beasts = generate(maps)
     for beast in beasts:
-        outfile.write(','.join([beast.id, beast.sprite, beast.right.id, beast.up.id, beast.left.id, beast.down.id, beast.inner.id, beast.song]))
+        outfile.write(','.join([beast.id, beast.sprite, beast.right.id, beast.up.id, beast.left.id, beast.down.id, beast.inner.id, beast.song.replace(',', '/')]))
         outfile.write('\n')
     outfile.flush()

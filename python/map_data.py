@@ -59,6 +59,33 @@ flower_dimension = {
 
 maps = [
     {
+        'data': ['p'],
+        'legend': {
+            'p': {
+                'id': 'player',
+                'sprite': 'ophan',
+                'type': 'stitched',
+                'stitches': {
+                    'inner': 'start/',
+                    'right': 'start/'
+                }
+            }
+        }
+    },
+    {  # Lurker
+        'data': ['l'],
+        'legend': {
+            'l': {
+                'sprite': 'spriggan_m',
+                'type': 'stitched',
+                'stitches': {
+                    'right': 'player/',
+                },
+                'song': 'heen wo rowo'
+            }
+        }
+    },
+    {
         'data': ['v'],
         'legend': {
             'v': {
@@ -196,7 +223,7 @@ maps = [
             '<____>',
             '<____>',
             '<_b__>',
-            '<____>',
+            '<___w>',
             '<____>',
         ],
         'legend': {
@@ -224,6 +251,10 @@ maps = [
                     'left': 'ldd'
                 },
                 'song': 'tut go gopo'
+            },
+            'w': {
+                'id': 'wanderer',
+                'sprite': 'cobble'
             }
         },
         'wrap_mode': 'wrap',
@@ -291,9 +322,28 @@ maps = [
             },
             'o': teleporter('maze_exit', 'start'),
             'v': {
-                'type': 'teleporter',
+                'type': 'wall',
                 'to_id': 'void',
                 'sprite': 'void'
+            }
+        }
+    }, {
+        'data': [
+            '___',
+            '_@_',
+            '___',
+        ],
+        'legend': {
+            '@': {
+                'type': 'stitched',
+                'sprite': 'hungry_ghost',
+                'stitches': {
+                    'inner': 'wanderer/'
+                },
+                'song': 'heen wo woro'
+            },
+            '_': {
+                'sprite': 'water_dark'
             }
         }
     }

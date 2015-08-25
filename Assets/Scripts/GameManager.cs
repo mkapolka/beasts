@@ -48,13 +48,10 @@ public class GameManager : MonoBehaviour {
       b.left = this.beasts[parts[4]];
       b.down = this.beasts[parts[5]];
       b.inner = this.beasts[parts[6]];
-      b.song = parts[7];
+      b.song = parts[7].Replace('/', ',');
     }
 
-    Beast player = new Beast();
-    player.inner = this.beasts["start"];
-    this.beasts.Add("player", player);
-    return player;
+    return this.beasts["player"];
   }
 
   public void Start() {
@@ -121,7 +118,7 @@ public class GameManager : MonoBehaviour {
     }
     if (this.moveTimer < 0) {
       bool reset = this.DoKeys();
-      if (this.moveTimer < -1.0 || reset) {
+      if (this.moveTimer < -0.25 || reset) {
         this.moveTimer = GameManager.MOVE_TIME;
         this.Tick();
         this.RefreshScreen();
