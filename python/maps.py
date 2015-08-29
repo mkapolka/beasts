@@ -1,3 +1,4 @@
+import inspect
 import collections
 import uuid
 
@@ -13,6 +14,7 @@ class BeastGrid(object):
         self.width = width
         self.height = height
         self.wrap_mode = wrap_mode
+        self.extra_beasts = []
 
     def get(self, x, y):
         if x < 0 or x >= self.width:
@@ -62,9 +64,24 @@ class BeastGrid(object):
     def all_beasts(self):
         for point in self.all_points():
             yield self.get(*point)
+        for beast in self.extra_beasts:
+            yield beast
 
 
-def initialize_grid(map_data):
+def init_beast(custom_data, id_prepend=''):
+    beast = Beast(custom_data.get('symbol', '?'))
+    beast.id = uuid.uuid4().hex
+
+    for key, value in custom_data.items():
+        setattr(beast, key, value)
+    if id_prepend:
+        beast.id = '%s_%s' % (id_prepend, beast.id)
+    beast.type = custom_data.get('type', None)
+    beast.sprite = custom_data['sprite']
+    return beast
+
+
+def initialize_grid(map_data, id_prepend=''):
     md = map_data['data']
     legend = map_data.get('legend', {})
 
@@ -79,16 +96,16 @@ def initialize_grid(map_data):
     for y, line in enumerate(md):
         for x, char in enumerate(line):
             symbol = md[y][x]
-            beast = Beast(symbol)
-            beast.id = uuid.uuid4().hex
-            beast.sprite = sprites.get(symbol, sprites['default'])
-            if symbol in legend.keys():
-                entry = legend[symbol]
-                for key, value in entry.items():
-                    setattr(beast, key, value)
-                beast.type = entry.get('type', None)
-                beast.sprite = entry.get('sprite', sprites.get(symbol, sprites['default']))
+            custom_data = legend.get(symbol, {})
+            if inspect.isfunction(custom_data):
+                custom_data = custom_data()
+            if 'sprite' not in custom_data:
+                custom_data['sprite'] = sprites.get(symbol, 'void')
+            beast = init_beast(custom_data, id_prepend)
             beast_map.set(x, y, beast)
+            for beast_data in custom_data.get('also', []):
+                also_beast = init_beast(beast_data, id_prepend)
+                beast_map.extra_beasts.append(also_beast)
     for (x, y) in beast_map.all_points():
             beast = beast_map.get(x, y)
             beast.left = beast.orig_left = beast_map.get(x - 1, y)
@@ -99,12 +116,14 @@ def initialize_grid(map_data):
 
 
 def do_pocket(pocket, all_beasts, customs):
-    pocket.innie = pocket.innie if getattr(pocket, 'innie', False) else False
-    pocket_map = initialize_grid(pocket.dimension)
+    pocket.innie = getattr(pocket, 'innie', False)
+    pocket_map = initialize_grid(pocket.dimension, pocket.id)
     for beast in pocket_map.all_beasts():
         all_beasts[beast.id] = beast
         if beast.type:
             customs[beast.type].append(beast)
+        if beast.stitches:
+            customs['stitched'].append(beast)
     exits = pocket.dimension.get('exits', 'lrud')
     if 'l' in exits:
         for point in pocket_map.left_wall_points():
@@ -217,6 +236,8 @@ def generate(maps):
             all_beasts[beast.id] = beast
             if beast.type:
                 customs[beast.type].append(beast)
+            if beast.stitches:
+                customs['stitched'].append(beast)
     for pocket in customs['pocket']:
         do_pocket(pocket, all_beasts, customs)
 
@@ -247,7 +268,7 @@ def generate(maps):
 
     return all_beasts.values()
 
-bb = next(b for b in generate(maps) if b.id == 'start')
+# bb = next(b for b in generate(maps) if b.id == 'start')
 
 if __name__ == "__main__":
     outfile = open('output.txt', 'w')

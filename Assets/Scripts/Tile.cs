@@ -33,8 +33,10 @@ public class Tile : MonoBehaviour {
     }
 
     this.GetComponent<SpriteRenderer>().sprite = current.sprite;
+    this.GetComponent<SpriteRenderer>().color = current.color;
     if (current.inner != current) {
       this.inner.sprite = current.inner.sprite;
+      this.inner.color = current.inner.color;
     } else {
       this.inner.sprite = null;
     }

@@ -5,11 +5,14 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
   public const float MOVE_TIME = .1f;
+  public const float TICK_TIME = .2f;
 
   public Dictionary<string, Beast> beasts = new Dictionary<string, Beast>();
 	public Beast playerBeast;
+	public Beast lurkerBeast;
   public Tile centerTile;
-  public float moveTimer = MOVE_TIME;
+  private float moveTimer = MOVE_TIME;
+  private float tickTimer = TICK_TIME;
 
   public InputField songField;
   public Image upImage;
@@ -56,6 +59,7 @@ public class GameManager : MonoBehaviour {
 
   public void Start() {
     this.playerBeast = this.LoadBeasts();
+    this.lurkerBeast = this.beasts["lurker"];
 
     this.RefreshScreen();
   }
@@ -94,14 +98,17 @@ public class GameManager : MonoBehaviour {
       this.playerBeast.Sing("tut wo wopo");
       return true;
     }
-    if (Input.GetKey(KeyCode.Space)) {
-      return true;
-    }
+
     return false;
   }
 
   public void Update() {
+    if (Input.GetKeyUp("left") || Input.GetKeyUp("right") || Input.GetKeyUp("down") || Input.GetKeyUp("up")) {
+      this.moveTimer = 0;
+    }
+
     this.moveTimer -= Time.deltaTime;
+    this.tickTimer -= Time.deltaTime;
     if (Input.GetKeyDown(KeyCode.Return)) {
       if (!this.songField.interactable) {
         this.songField.text = "";
@@ -118,11 +125,16 @@ public class GameManager : MonoBehaviour {
     }
     if (this.moveTimer < 0) {
       bool reset = this.DoKeys();
-      if (this.moveTimer < -0.25 || reset) {
+      if (reset) {
         this.moveTimer = GameManager.MOVE_TIME;
-        this.Tick();
+        this.lurkerBeast.Sing();
         this.RefreshScreen();
       }
+    }
+    if (this.tickTimer < 0) {
+      this.tickTimer = GameManager.TICK_TIME;
+      this.Tick();
+      this.RefreshScreen();
     }
   }
 
@@ -143,6 +155,7 @@ public class GameManager : MonoBehaviour {
 
   public void UISing(string song) {
     this.playerBeast.Sing(song);
+    this.lurkerBeast.Sing();
     this.RefreshScreen();
   }
 }

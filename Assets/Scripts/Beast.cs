@@ -12,6 +12,7 @@ public class Beast {
   public string song = null;
 
   public Sprite sprite;
+  public Color color;
 
   public Beast() {
     this.up = this;
@@ -19,6 +20,7 @@ public class Beast {
     this.left = this;
     this.right = this;
     this.inner = this;
+    this.color = new Color(Random.Range(.8f, 1.0f), Random.Range(.8f, 1.0f), Random.Range(.8f, 1.0f));
   }
 
   public class BeastLink {
@@ -76,8 +78,12 @@ public class Beast {
     }
 
     public BeastLink invert() {
+      return this.reciprocate(this);
+    }
+
+    public BeastLink reciprocate(BeastLink other) {
       BeastLink output = new BeastLink(this.get(), "");
-      switch (this.direction) {
+      switch (other.direction) {
         case "up":
           output.direction = "down";
         break;
@@ -95,6 +101,10 @@ public class Beast {
         break;
       }
       return output;
+    }
+
+    public BeastLink extend() {
+      return new BeastLink(this.get(), this.direction);
     }
   }
 
@@ -127,6 +137,11 @@ public class Beast {
     return current;
   }
 
+  public void LinkReciprocally(BeastLink from, BeastLink to) {
+    from.reciprocate(to).set(to.beast);
+    to.set(from.get());
+  }
+
   public void SingPhrase(string song) {
     string[] parts = song.Trim().Split(' ');
 
@@ -146,16 +161,36 @@ public class Beast {
         from_name.set(a);
       break;
 
+      case "beh":
+        to_name = this.ParseRelative(parts[1]);
+        from_name = this.ParseRelative(parts[2]);
+        this.LinkReciprocally(from_name, to_name);
+      break;
+
+      case "puk":
+        to_name = this.ParseRelative(parts[1]);
+        from_name = to_name.extend();
+        this.LinkReciprocally(from_name, to_name);
+      break;
+
+      case "yuk":
+        to_name = this.ParseRelative(parts[1]);
+        from_name = this.ParseRelative(parts[1]);
+        BeastLink second = to_name.extend().invert();
+        this.LinkReciprocally(from_name, to_name);
+        this.LinkReciprocally(second, from_name);
+      break;
+
       case "heen": //heen wo woro = my wo becomes woro, woro's wo becomes ema
         // Reciprocal tut, tut back & clear previous
         to_name = this.ParseRelative(parts[1]);
         from_name = this.ParseRelative(parts[2]);
-        // Clear the old link
-        to_name.invert().set(to_name.get());
+        if (to_name.invert().get() == to_name.beast) {
+          to_name.invert().set(to_name.get());
+        }
         to_name.set(from_name.get());
-        // Create reciprocal link
-        BeastLink from_to = to_name.invert();
-        from_to.set(to_name.beast);
+        from_name.reciprocate(to_name).set(to_name.beast);
+        from_name.set(from_name.beast);
       break;
 
       case "suj":

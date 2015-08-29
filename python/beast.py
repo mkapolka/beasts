@@ -12,6 +12,7 @@ class Beast(object):
         self.id = ''
         self.type = ''
         self.song = ''
+        self.stitches = {}
 
     @property
     def all(self):

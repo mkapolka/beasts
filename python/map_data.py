@@ -1,6 +1,99 @@
 import uuid
 
 
+def color_changer():
+    ground_id = uuid.uuid4().hex
+    # inner_id = uuid.uuid4().hex
+
+    return {
+        'id': ground_id,
+        'type': 'pocket',
+        'dimension': {
+            'data': [
+                'S____w',
+                'e_____',
+            ],
+            'legend': {
+                'S': {
+                    'stitches': {
+                        'left': '%s/' % ground_id,
+                    },
+                    'song': 'tut gowo popo'
+                },
+                'w': {
+                    'stitches': {
+                        'down': '%s_eye/' % ground_id
+                    },
+                    'song': 'tut popo poporo, tut po poro'
+                },
+                '_': {
+                    'sprite': 'void',
+                    'stitches': {
+                        'down': 's'
+                    }
+                },
+                'e': {
+                    'id': 'eye',
+                    'stitches': {
+                        'down': 'transmutation/',
+                    }
+                }
+            },
+            'exits': '',
+            'wrap_mode': 'looped'
+        },
+        'sprite': 'grass',
+        'entrances': '',
+        'innie': False,
+    }
+
+
+def mushroom_pocket():
+    ground_id = uuid.uuid4().hex
+    inner_id = uuid.uuid4().hex
+    return {
+        'id': ground_id,
+        'type': 'pocket',
+        'dimension': flower_dimension,
+        'sprite': 'grass',
+        'entrances': '',
+        'innie': True,
+        'also': [{
+            'id': inner_id,
+            'sprite': 'mushroom_pink',
+            'stitches': {
+                'inner': '%s/' % ground_id,
+                'up': '%s_entrance/' % ground_id,
+                'left': '%s/' % ground_id,
+                'right': '%s/u' % ground_id,
+            },
+            'song': 'tut gobo ro, tut go wo, tut ro wobo, tut wobo bo'
+        }],
+        'stitches': {
+            'inner': '%s/' % inner_id
+        }
+    }
+
+
+def tree():
+    ground_id = uuid.uuid4().hex
+    tree_id = uuid.uuid4().hex
+    return {
+        'id': ground_id,
+        'sprite': 'grass',
+        'also': [{
+            'id': tree_id,
+            'sprite': 'tree',
+            'stitches': {
+                'inner': '%s/' % ground_id
+            }
+        }],
+        'stitches': {
+            'inner': '%s/' % tree_id
+        }
+    }
+
+
 def alta(to_id, id=None):
     return {
         'id': id or uuid.uuid4().hex,
@@ -47,11 +140,15 @@ flower_dimension = {
         '##_##',
         '##_##',
         '##_##',
-        '##_##',
+        '##e##',
     ],
     'legend': {
         '_': {'sprite': 'bog'},
         '#': {'sprite': 'slime'},
+        'e': {
+            'id': 'entrance',
+            'sprite': 'bog'
+        }
     },
     'exits': 'd'
 }
@@ -64,7 +161,6 @@ maps = [
             'p': {
                 'id': 'player',
                 'sprite': 'ophan',
-                'type': 'stitched',
                 'stitches': {
                     'inner': 'start/',
                     'right': 'start/'
@@ -76,12 +172,12 @@ maps = [
         'data': ['l'],
         'legend': {
             'l': {
+                'id': 'lurker',
                 'sprite': 'spriggan_m',
-                'type': 'stitched',
                 'stitches': {
                     'right': 'player/',
                 },
-                'song': 'heen wo rowo'
+                'song': 'tut wowo bo, tut bo rowowo, beh wo rowo'
             }
         }
     },
@@ -100,9 +196,9 @@ maps = [
             "########################",
             "########################",
             "########################",
-            "####____________########",
-            "####____q_________v#####",
-            "####____________########",
+            "####_c_c_c_c____########",
+            "####c___q___c_____v#####",
+            "####_c_c_c_c____########",
             "####____________########",
             "########__##############",
             "########__##############",
@@ -111,11 +207,11 @@ maps = [
             "########__##############",
             "########__##############",
             "########__##############",
-            "###___________##########",
+            "###_T_______T_##########",
             "###_____X_____#####___##",
-            "##b_________________p_##",
+            "##b_________T_______p_##",
             "###___________#####___##",
-            "###___________##########",
+            "###_T_T___T___##########",
             "########d###############",
             "########################",
         ],
@@ -135,7 +231,9 @@ maps = [
                 'dimension': pocket_dimension
             },
             'v': teleporter('vovo', 'void'),
-            'f': teleporter('to_flower', 'flower_entrance')
+            'f': teleporter('to_flower', 'flower_entrance'),
+            'T': tree,
+            'c': color_changer,
         }
     },
     {
@@ -230,7 +328,6 @@ maps = [
             'b': teleporter('zoomie', 'boob'),
             '>': {
                 'sprite': 'brick',
-                'type': 'stitched',
                 'stitches': {
                     'right': 'ruu'
                 },
@@ -238,7 +335,6 @@ maps = [
             },
             '<': {
                 'sprite': 'cobble',
-                'type': 'stitched',
                 'stitches': {
                     'left': 'ldd'
                 },
@@ -246,7 +342,6 @@ maps = [
             },
             'c': {
                 'sprite': 'brick',
-                'type': 'stitched',
                 'stitches': {
                     'left': 'ldd'
                 },
@@ -264,9 +359,8 @@ maps = [
             'default': 'cobble'
         }
     },
-    {
+    {  # Sinuous rills
         'data': [
-            '~~~~~~~~~~~~~~~~',
             '~~~~~~~~~~~~~~~~',
             '~_f_f__f______f~',
             '~e_________f___~',
@@ -276,13 +370,7 @@ maps = [
         'legend': {
             '~': {'sprite': 'water_light'},
             '_': {'sprite': 'grass'},
-            'f': {
-                'type': 'pocket',
-                'dimension': flower_dimension,
-                'entrances': 'u',
-                'sprite': 'hungry_ghost',
-                'innie': True
-            },
+            'f': mushroom_pocket,
             'e': {'id': 'flower_entrance', 'sprite': 'grass'}
         }
     },
@@ -291,7 +379,7 @@ maps = [
             'vvvvvvvvvv',
             'vcvv_____v',
             'v_vv_vv_vv',
-            'v_vv_vv_vv',
+            'v_vv_vvrvv',
             'v_vv_vvvvv',
             'v_vv_____v',
             'v_vvvovv_v',
@@ -308,14 +396,12 @@ maps = [
             '#': {'sprite': 'brick', 'type': 'wall'},
             '>': {
                 'sprite': 'brick',
-                'type': 'stitched',
                 'stitches': {
                     'right': 's'
                 }
             },
             '^': {
                 'sprite': 'brick',
-                'type': 'stitched',
                 'stitches': {
                     'up': 's'
                 }
@@ -325,7 +411,8 @@ maps = [
                 'type': 'wall',
                 'to_id': 'void',
                 'sprite': 'void'
-            }
+            },
+            'r': teleporter('to_colors', 'transmutation')
         }
     }, {
         'data': [
@@ -335,16 +422,24 @@ maps = [
         ],
         'legend': {
             '@': {
-                'type': 'stitched',
                 'sprite': 'hungry_ghost',
                 'stitches': {
                     'inner': 'wanderer/'
                 },
-                'song': 'heen wo woro'
+                'song': 'tut wowo wo, beh wo woro'
             },
             '_': {
                 'sprite': 'water_dark'
             }
         }
-    }
+    },
+    {  # Where the colors live
+        'data': [
+            '1234567890ab'
+        ],
+        'legend': {
+            k: {'id': v, 'sprite': v, 'stitches': {'up': 'ur', 'down': 'dl'}} for (k, v) in zip('1234567890ab', ['transmutation', 'translocation', 'summoning', 'poison', 'necromancy', 'ice', 'fire', 'enchantment', 'earth', 'conjuration', 'divination', 'air'])
+        },
+        'wrap_mode': 'looped'
+    },
 ]
