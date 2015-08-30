@@ -1,6 +1,17 @@
 import uuid
 
 
+def lurker(sprite, watching_id, direction):
+    return {
+        'id': '%s_lurker' % watching_id,
+        'sprite': sprite,
+        'stitches': {
+            'right': '%s//r' % watching_id,
+        },
+        'song': 'ibi wowo ema tut wowo wo, beh wo ro%s' % direction
+    }
+
+
 def color_changer():
     ground_id = uuid.uuid4().hex
     # inner_id = uuid.uuid4().hex
@@ -54,22 +65,67 @@ def mushroom_pocket():
     return {
         'id': ground_id,
         'type': 'pocket',
-        'dimension': flower_dimension,
+        'dimension': {
+            'data': [
+                '#####',
+                '#_d_#',
+                '#___#',
+                '#___#',
+                '##_##',
+                '##_##',
+                '##_##',
+                'vvevv',
+            ],
+            'legend': {
+                '_': {'sprite': 'bog'},
+                '#': {'sprite': 'slime'},
+                'v': {
+                    'sprite': 'slime',
+                    'stitches': {
+                        'down': '%s/' % inner_id
+                    }
+                },
+                'e': {
+                    'id': 'entrance',
+                    'sprite': 'bog',
+                    'stitches': {
+                        'down': '%s/' % inner_id
+                    }
+                },
+                'd': {
+                    'id': 'start',
+                    'sprite': 'bog',
+                    'also': [{
+                        'id': 'beetle',
+                        'sprite': 'necromancy',
+                        'song': 'ibi popo po tut po bo, tut po popo',
+                        'stitches': {
+                            'down': '%s_start/' % (ground_id),
+                            'up': '%s_start/' % ground_id
+                        }},
+                        lurker('beetle', '%s_beetle' % ground_id, 'po')
+                    ],
+                    'stitches': {
+                        'up': '%s_beetle/' % ground_id
+                    }
+                }
+            },
+            'exits': 'd'
+        },
         'sprite': 'grass',
-        'entrances': '',
+        'entrances': 'u',
         'innie': True,
         'also': [{
             'id': inner_id,
             'sprite': 'mushroom_pink',
             'stitches': {
-                'inner': '%s/' % ground_id,
-                'up': '%s_entrance/' % ground_id,
-                'left': '%s/' % ground_id,
-                'right': '%s/u' % ground_id,
-            },
-            'song': 'tut gobo ro, tut go wo, tut ro wobo, tut wobo bo'
-        }],
+                'down': '%s/' % ground_id,
+                'up': '%s_entrance/' % (ground_id),
+            }},
+            lurker('mushroom_pink', inner_id, 'po')
+        ],
         'stitches': {
+            'up': '%s//c' % inner_id,
             'inner': '%s/' % inner_id
         }
     }
@@ -131,32 +187,9 @@ pocket_dimension = {
     }
 }
 
-flower_dimension = {
-    'data': [
-        '#####',
-        '#___#',
-        '#___#',
-        '#___#',
-        '##_##',
-        '##_##',
-        '##_##',
-        '##e##',
-    ],
-    'legend': {
-        '_': {'sprite': 'bog'},
-        '#': {'sprite': 'slime'},
-        'e': {
-            'id': 'entrance',
-            'sprite': 'bog'
-        }
-    },
-    'exits': 'd'
-}
-
-
 maps = [
     {
-        'data': ['p'],
+        'data': ['pl'],
         'legend': {
             'p': {
                 'id': 'player',
@@ -165,20 +198,8 @@ maps = [
                     'inner': 'start/',
                     'right': 'start/'
                 }
-            }
-        }
-    },
-    {  # Lurker
-        'data': ['l'],
-        'legend': {
-            'l': {
-                'id': 'lurker',
-                'sprite': 'spriggan_m',
-                'stitches': {
-                    'right': 'player/',
-                },
-                'song': 'tut wowo bo, tut bo rowowo, beh wo rowo'
-            }
+            },
+            'l': lurker('spriggan_m', 'player', 'wo')
         }
     },
     {
@@ -361,14 +382,24 @@ maps = [
     },
     {  # Sinuous rills
         'data': [
-            '~~~~~~~~~~~~~~~~',
-            '~_f_f__f______f~',
-            '~e_________f___~',
-            '~______________~',
-            '~~~~~~~~~~~~~~~~',
+            '~~~~o~~~~~~~~o~~',
+            '~___r____f___r_~',
+            '~e__r________r_~',
+            '~___rrrrr_rrrr_~',
+            '~_______r_r____~',
+            '~__rrrr_r_rrrr_~',
+            '~__r__rrr____r_~',
+            '~_rr_____rrrrr_~',
+            '~_r_rrrr_r_____~',
+            '~_rrr__r_r_rrr_~',
+            '~______r_r_r_r_~',
+            'rrrrrrrr_rrr_r_~',
+            '~~~~~~~~~~~~~r~~',
         ],
         'legend': {
             '~': {'sprite': 'water_light'},
+            'r': {'sprite': 'water_light', 'type': 'rill'},
+            'o': {'sprite': 'water_light', 'type': 'rill_origin'},
             '_': {'sprite': 'grass'},
             'f': mushroom_pocket,
             'e': {'id': 'flower_entrance', 'sprite': 'grass'}
@@ -408,9 +439,8 @@ maps = [
             },
             'o': teleporter('maze_exit', 'start'),
             'v': {
-                'type': 'wall',
+                'type': 'alta',
                 'to_id': 'void',
-                'sprite': 'void'
             },
             'r': teleporter('to_colors', 'transmutation')
         }

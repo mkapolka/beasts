@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour {
 
   public void Start() {
     this.playerBeast = this.LoadBeasts();
-    this.lurkerBeast = this.beasts["lurker"];
+    this.lurkerBeast = this.beasts["player_lurker"];
 
     this.RefreshScreen();
   }
@@ -96,6 +96,10 @@ public class GameManager : MonoBehaviour {
     }
     if (Input.GetKey("down")) {
       this.playerBeast.Sing("tut wo wopo");
+      return true;
+    }
+    if (Input.GetKey(">")) {
+      this.playerBeast.Sing("tut wo wowo");
       return true;
     }
 

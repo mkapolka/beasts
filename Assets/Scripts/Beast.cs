@@ -185,12 +185,12 @@ public class Beast {
         // Reciprocal tut, tut back & clear previous
         to_name = this.ParseRelative(parts[1]);
         from_name = this.ParseRelative(parts[2]);
-        if (to_name.invert().get() == to_name.beast) {
-          to_name.invert().set(to_name.get());
-        }
+
+        to_name.invert().set(to_name.invert().beast);
+        from_name.reciprocate(to_name).invert().set(from_name.reciprocate(to_name).get());
+
         to_name.set(from_name.get());
         from_name.reciprocate(to_name).set(to_name.beast);
-        from_name.set(from_name.beast);
       break;
 
       case "suj":

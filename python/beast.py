@@ -9,14 +9,14 @@ class Beast(object):
         self.down = self
         self.inner = self
         self.symbol = symbol
-        self.id = ''
+        self.id = uuid.uuid4().hex
         self.type = ''
         self.song = ''
         self.stitches = {}
 
     @property
     def all(self):
-        return None
+        return [self.up, self.down, self.right, self.left, self.inner]
 
     @all.setter
     def all(self, value):

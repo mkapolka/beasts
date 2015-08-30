@@ -200,9 +200,19 @@ def calc_stitch_string(beast, string, all_beasts):
     """ id/udlr """
     parts = string.split('/')
     current = beast
-    if len(parts) > 1:
+    dirs = 's'
+    flags = ''
+    if len(parts) == 1:
+        dirs = string
+    elif len(parts) == 2:
         current = all_beasts[parts[0]]
-    for direction in parts[-1]:
+        dirs = parts[1]
+    elif len(parts) == 3:
+        current = all_beasts[parts[0]]
+        dirs = parts[1]
+        flags = parts[2]
+
+    for direction in dirs:
         current = {
             'u': current.orig_up,
             'd': current.orig_down,
@@ -211,20 +221,44 @@ def calc_stitch_string(beast, string, all_beasts):
             'i': current.inner,
             's': current
         }[direction]
-    return current
+    return current, flags
 
 
 def stitch(beast, all_beasts, up_string='', down_string='', left_string='', right_string='', inner_string=''):
-    up = calc_stitch_string(beast, up_string, all_beasts) if up_string else beast.up
-    down = calc_stitch_string(beast, down_string, all_beasts) if down_string else beast.down
-    left = calc_stitch_string(beast, left_string, all_beasts) if left_string else beast.left
-    right = calc_stitch_string(beast, right_string, all_beasts) if right_string else beast.right
-    inner = calc_stitch_string(beast, inner_string, all_beasts) if inner_string else beast.inner
+    up, ur = calc_stitch_string(beast, up_string, all_beasts) if up_string else (beast.up, False)
+    down, dr = calc_stitch_string(beast, down_string, all_beasts) if down_string else (beast.down, False)
+    left, lr = calc_stitch_string(beast, left_string, all_beasts) if left_string else (beast.left, False)
+    right, rr = calc_stitch_string(beast, right_string, all_beasts) if right_string else (beast.right, False)
+    inner, ir = calc_stitch_string(beast, inner_string, all_beasts) if inner_string else (beast.inner, False)
     beast.up = up
     beast.down = down
     beast.left = left
     beast.right = right
     beast.inner = inner
+    if ur == 'r':
+        beast.up.down = beast
+    elif ur == 'c':
+        beast.orig_up.down = beast.orig_up
+
+    if dr == 'r':
+        beast.down.up = beast
+    elif dr == 'c':
+        beast.orig_down.up = beast.orig_down
+
+    if lr == 'r':
+        beast.left.right = beast
+    elif lr == 'c':
+        beast.orig_left.right = beast.orig_left
+
+    if rr == 'r':
+        beast.right.left = beast
+    elif rr == 'c':
+        beast.orig_right.left = beast.orig_right
+
+    if ir == 'r':
+        beast.inner.inner = beast
+    elif ir == 'c':
+        beast.orig_inner.inner = beast.orig_inner
 
 
 def generate(maps):
@@ -265,6 +299,31 @@ def generate(maps):
     for stitched in customs['stitched']:
         stitches = stitched.stitches
         stitch(stitched, all_beasts, stitches.get('up', ''), stitches.get('down', ''), stitches.get('left', ''), stitches.get('right', ''), stitches.get('inner', ''))
+    for origin in customs['rill_origin']:
+        rills = customs['rill']
+        rill_path = [origin]
+        n = origin
+        while n is not None:
+            c = n
+            n = None
+            for adjacent in c.all:
+                if adjacent in rills and adjacent not in rill_path:
+                    rill_path.append(adjacent)
+                    rills.remove(adjacent)
+                    n = adjacent
+        watchers = [Beast('r') for b in rill_path]
+        for n, watcher in enumerate(watchers):
+            watcher.sprite = 'water_dark'
+            watcher.left = watchers[n - 1]
+            watcher.right = watchers[n + 1] if n < len(watchers) - 1 else watchers[0]
+            watcher.up = rill_path[n]
+            all_beasts[watcher.id] = watcher
+        # Rill rider
+        rill_rider = Beast('a')
+        rill_rider.sprite = 'alligator'
+        rill_rider.song = 'tut bobowo bobo, tut bo boro, tut bobowo ema'
+        rill_rider.up = watchers[0]
+        all_beasts[rill_rider.id] = rill_rider
 
     return all_beasts.values()
 
