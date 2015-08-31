@@ -23,6 +23,19 @@ public class Beast {
     this.color = new Color(Random.Range(.8f, 1.0f), Random.Range(.8f, 1.0f), Random.Range(.8f, 1.0f));
   }
 
+  public void SetSong(string song) {
+    this.song = song;
+    if (this.song != null) {
+      if (!GameManager.withSongs.Contains(this)) {
+        GameManager.withSongs.Add(this);
+      }
+    } else {
+      if (GameManager.withSongs.Contains(this)) {
+        GameManager.withSongs.Remove(this);
+      }
+    }
+  }
+
   public class BeastLink {
     public Beast beast;
     public string direction;

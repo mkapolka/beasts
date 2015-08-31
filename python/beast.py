@@ -13,6 +13,7 @@ class Beast(object):
         self.type = ''
         self.song = ''
         self.stitches = {}
+        self.also_beasts = []
 
     @property
     def all(self):

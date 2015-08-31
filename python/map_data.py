@@ -3,10 +3,11 @@ import uuid
 
 def lurker(sprite, watching_id, direction):
     return {
-        'id': '%s_lurker' % watching_id,
+        'id': ('%s_lurker' % watching_id) if watching_id else uuid.uuid4().hex,
+        'type': 'lurker',
         'sprite': sprite,
         'stitches': {
-            'right': '%s//r' % watching_id,
+            'right': ('%s//r' % watching_id) if watching_id else '',
         },
         'song': 'ibi wowo ema tut wowo wo, beh wo ro%s' % direction
     }
@@ -399,7 +400,17 @@ maps = [
         'legend': {
             '~': {'sprite': 'water_light'},
             'r': {'sprite': 'water_light', 'type': 'rill'},
-            'o': {'sprite': 'water_light', 'type': 'rill_origin'},
+            'o': {
+                'sprite': 'water_light',
+                'type': 'rill_origin',
+                'also': [
+                    {
+                        'sprite': 'fire',
+                        'type': 'rill_rider',
+                        'song': 'tut bo boro'
+                    },
+                    lambda: lurker('alligator', '', 'bobo')]
+            },
             '_': {'sprite': 'grass'},
             'f': mushroom_pocket,
             'e': {'id': 'flower_entrance', 'sprite': 'grass'}

@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour {
   public const float MOVE_TIME = .1f;
   public const float TICK_TIME = .2f;
 
+  public static List<Beast> withSongs = new List<Beast>();
+
   public Dictionary<string, Beast> beasts = new Dictionary<string, Beast>();
 	public Beast playerBeast;
 	public Beast lurkerBeast;
@@ -51,7 +53,7 @@ public class GameManager : MonoBehaviour {
       b.left = this.beasts[parts[4]];
       b.down = this.beasts[parts[5]];
       b.inner = this.beasts[parts[6]];
-      b.song = parts[7].Replace('/', ',');
+      b.SetSong(parts[7].Replace('/', ','));
     }
 
     return this.beasts["player"];
@@ -143,7 +145,7 @@ public class GameManager : MonoBehaviour {
   }
 
   public void Tick() {
-    foreach (Beast beast in this.beasts.Values) {
+    foreach (Beast beast in GameManager.withSongs) {
       beast.Sing();
     }
   }

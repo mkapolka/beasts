@@ -104,8 +104,11 @@ def initialize_grid(map_data, id_prepend=''):
             beast = init_beast(custom_data, id_prepend)
             beast_map.set(x, y, beast)
             for beast_data in custom_data.get('also', []):
+                if inspect.isfunction(beast_data):
+                    beast_data = beast_data()
                 also_beast = init_beast(beast_data, id_prepend)
                 beast_map.extra_beasts.append(also_beast)
+                beast.also_beasts.append(also_beast)
     for (x, y) in beast_map.all_points():
             beast = beast_map.get(x, y)
             beast.left = beast.orig_left = beast_map.get(x - 1, y)
@@ -319,10 +322,11 @@ def generate(maps):
             watcher.up = rill_path[n]
             all_beasts[watcher.id] = watcher
         # Rill rider
-        rill_rider = Beast('a')
-        rill_rider.sprite = 'alligator'
-        rill_rider.song = 'tut bobowo bobo, tut bo boro, tut bobowo ema'
+        rill_rider = next(b for b in origin.also_beasts if b.type == 'rill_rider')
         rill_rider.up = watchers[0]
+        lurker = next(b for b in origin.also_beasts if b.type == 'lurker')
+        lurker.right = rill_rider
+        rill_rider.left = lurker
         all_beasts[rill_rider.id] = rill_rider
 
     return all_beasts.values()
