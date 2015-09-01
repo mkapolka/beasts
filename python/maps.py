@@ -74,7 +74,7 @@ def init_beast(custom_data, id_prepend=''):
 
     for key, value in custom_data.items():
         setattr(beast, key, value)
-    if id_prepend:
+    if id_prepend and not beast.absolute_id:
         beast.id = '%s_%s' % (id_prepend, beast.id)
     beast.type = custom_data.get('type', None)
     beast.sprite = custom_data['sprite']
@@ -121,12 +121,15 @@ def initialize_grid(map_data, id_prepend=''):
 def do_pocket(pocket, all_beasts, customs):
     pocket.innie = getattr(pocket, 'innie', False)
     pocket_map = initialize_grid(pocket.dimension, pocket.id)
+    pocket.map = pocket_map
     for beast in pocket_map.all_beasts():
         all_beasts[beast.id] = beast
         if beast.type:
             customs[beast.type].append(beast)
         if beast.stitches:
             customs['stitched'].append(beast)
+        if beast.dimension:
+            customs['pocket'].append(beast)
     exits = pocket.dimension.get('exits', 'lrud')
     if 'l' in exits:
         for point in pocket_map.left_wall_points():
@@ -275,6 +278,9 @@ def generate(maps):
                 customs[beast.type].append(beast)
             if beast.stitches:
                 customs['stitched'].append(beast)
+            if beast.dimension:
+                customs['pocket'].append(beast)
+
     for pocket in customs['pocket']:
         do_pocket(pocket, all_beasts, customs)
 
@@ -324,10 +330,15 @@ def generate(maps):
         # Rill rider
         rill_rider = next(b for b in origin.also_beasts if b.type == 'rill_rider')
         rill_rider.up = watchers[0]
-        lurker = next(b for b in origin.also_beasts if b.type == 'lurker')
-        lurker.right = rill_rider
-        rill_rider.left = lurker
         all_beasts[rill_rider.id] = rill_rider
+
+    for n, lurkroom in enumerate(customs['lurkroom']):
+        previous = customs['lurkroom'][n - 1]
+        lurkmap = lurkroom.map
+        previous_lurkmap = previous.map
+        for (x, y) in lurkmap.right_wall_points():
+            lurkmap.get(x, y).right = previous_lurkmap.get(0, y)
+            previous_lurkmap.get(0, y).left = lurkmap.get(x, y)
 
     return all_beasts.values()
 

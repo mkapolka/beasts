@@ -14,6 +14,8 @@ class Beast(object):
         self.song = ''
         self.stitches = {}
         self.also_beasts = []
+        self.absolute_id = False
+        self.dimension = None
 
     @property
     def all(self):

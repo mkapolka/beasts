@@ -1,15 +1,51 @@
 import uuid
 
 
-def lurker(sprite, watching_id, direction):
+def rill_origin():
+    rider_id = uuid.uuid4().hex
     return {
-        'id': ('%s_lurker' % watching_id) if watching_id else uuid.uuid4().hex,
-        'type': 'lurker',
-        'sprite': sprite,
-        'stitches': {
-            'right': ('%s//r' % watching_id) if watching_id else '',
-        },
-        'song': 'ibi wowo ema tut wowo wo, beh wo ro%s' % direction
+        'sprite': 'water_light',
+        'type': 'rill_origin',
+        'also': [
+            {
+                'id': rider_id,
+                'sprite': 'fire',
+                'type': 'rill_rider',
+                'song': 'tut bo boro'
+            },
+            lambda: lurker('alligator', rider_id, 'bobo')]
+    }
+
+
+def lurker(sprite, watching_id, direction, reciprocate=True, absolute_lurker_id=False):
+    return {
+        'id': 'lurkroom_%s' % (watching_id if watching_id else uuid.uuid4().hex),
+        'type': 'lurkroom',
+        'sprite': 'void',
+        'entrances': '',
+        'dimension': {
+            'data': [
+                '###',
+                '#l#',
+                '#_#',
+                '___',
+            ],
+            'wrap_mode': 'bounded',
+            'legend': {
+                '#': {'sprite': 'stone'},
+                '_': {'sprite': 'cobble'},
+                'l': {
+                    'id': ('%s_lurker' % watching_id) if watching_id else uuid.uuid4().hex,
+                    'absolute_id': absolute_lurker_id,
+                    'type': 'lurker',
+                    'sprite': sprite,
+                    'stitches': {
+                        'right': ('%s//%s' % (watching_id, 'r' if reciprocate else '')) if watching_id else '',
+                    },
+                    'song': 'ibi wowo ema tut wowo wo, beh wo ro%s' % direction
+                },
+            }
+        }
     }
 
 
@@ -200,7 +236,7 @@ maps = [
                     'right': 'start/'
                 }
             },
-            'l': lurker('spriggan_m', 'player', 'wo')
+            'l': lurker('spriggan_m', 'player', 'wo', absolute_lurker_id=True)
         }
     },
     {
@@ -400,17 +436,7 @@ maps = [
         'legend': {
             '~': {'sprite': 'water_light'},
             'r': {'sprite': 'water_light', 'type': 'rill'},
-            'o': {
-                'sprite': 'water_light',
-                'type': 'rill_origin',
-                'also': [
-                    {
-                        'sprite': 'fire',
-                        'type': 'rill_rider',
-                        'song': 'tut bo boro'
-                    },
-                    lambda: lurker('alligator', '', 'bobo')]
-            },
+            'o': rill_origin,
             '_': {'sprite': 'grass'},
             'f': mushroom_pocket,
             'e': {'id': 'flower_entrance', 'sprite': 'grass'}
