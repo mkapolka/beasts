@@ -30,6 +30,7 @@ def lurker(sprite, watching_id, direction, reciprocate=True, absolute_lurker_id=
                 '#_#',
                 '___',
             ],
+            'exits': '',
             'wrap_mode': 'bounded',
             'legend': {
                 '#': {'sprite': 'stone'},
@@ -419,19 +420,19 @@ maps = [
     },
     {  # Sinuous rills
         'data': [
-            '~~~~o~~~~~~~~o~~',
-            '~___r____f___r_~',
-            '~e__r________r_~',
-            '~___rrrrr_rrrr_~',
-            '~_______r_r____~',
-            '~__rrrr_r_rrrr_~',
-            '~__r__rrr____r_~',
-            '~_rr_____rrrrr_~',
-            '~_r_rrrr_r_____~',
-            '~_rrr__r_r_rrr_~',
-            '~______r_r_r_r_~',
-            'rrrrrrrr_rrr_r_~',
-            '~~~~~~~~~~~~~r~~',
+            '~~~~o~~~~~~~~o~r~~~~~~~~~~',
+            '~___r____f___r_r_________~',
+            '~e__r________r_r_rrrrrr__~',
+            '~___rrrrr_rrrr_rrr____r__~',
+            '~_______r_r______#BBB#r__~',
+            '~__rrrr_r_rrrr___1###/r__~',
+            '~__r__rrr____r___R###Gr__~',
+            '~_rr_____rrrrr___2###/rr_~',
+            '~_r_rrrr_r_______#PPP#_r_~',
+            '~_rrr__r_r_rrr_rrr____rr_~',
+            '~______r_r_r_r_r_r___rr__~',
+            'rrrrrrrr_rrr_r_r_r__rr___~',
+            '~~~~~~~~~~~~~r~r~o~~o~~~~~',
         ],
         'legend': {
             '~': {'sprite': 'water_light'},
@@ -439,7 +440,135 @@ maps = [
             'o': rill_origin,
             '_': {'sprite': 'grass'},
             'f': mushroom_pocket,
-            'e': {'id': 'flower_entrance', 'sprite': 'grass'}
+            'e': {'id': 'flower_entrance', 'sprite': 'grass'},
+            'R': {
+                'id': 'rill_red',
+                'sprite': 'fire',
+                'stitches': {
+                    'right': 'red_room_entrance/'
+                }
+            },
+            'G': {
+                'id': 'rill_green',
+                'sprite': 'poison',
+                'stitches': {
+                    'left': 'green_room_entrance/'
+                }
+            },
+            '/': {
+                'sprite': 'poison',
+                'type': 'portal_extender',
+                'base_id': 'rill_green',
+            },
+            '1': {
+                'sprite': 'fire',
+                'stitches': {
+                    'right': 'red_room_entrance/u'
+                }
+            },
+            '2': {
+                'sprite': 'fire',
+                'stitches': {
+                    'right': 'red_room_entrance/d'
+                }
+            },
+        }
+    },
+    {
+        'data': [
+            'F^^7#^^^',
+            '|rr><gg/',
+            'Rrr><ggG',
+            '|rr><gg/',
+            'LvvJ<vvv',
+            '<pp><^^>',
+            '<pp><bb>',
+            '<pp><bb>',
+            '<pp><bb>',
+            'LvvJ<bb>',
+        ],
+        'legend': {
+            '#': {'sprite': 'stone'},
+            'r': {'sprite': 'fire'},
+            'R': {
+                'id': 'red_room_entrance',
+                'sprite': 'fire',
+                'stitches': {
+                    'left': 'rill_red/'
+                }
+            },
+            'G': {
+                'id': 'green_room_entrance',
+                'sprite': 'poison',
+                'stitches': {
+                    'right': 'rill_green/'
+                }
+            },
+            '/': {
+                'sprite': 'poison',
+                'type': 'portal_extender',
+                'base_id': 'green_room_entrance',
+            },
+            '|': {
+                'sprite': 'fire',
+                'type': 'portal_extender',
+                'base_id': 'red_room_entrance',
+            },
+            'b': {'sprite': 'ice'},
+            'g': {'sprite': 'poison'},
+            'p': {'sprite': 'purple'},
+            '>': {
+                'sprite': 'stone',
+                'stitches': {
+                    'right': 's'
+                }
+            },
+            '<': {
+                'sprite': 'stone',
+                'stitches': {
+                    'left': 's'
+                }
+            },
+            '^': {
+                'sprite': 'stone',
+                'stitches': {
+                    'up': 's'
+                }
+            },
+            'v': {
+                'sprite': 'stone',
+                'stitches': {
+                    'down': 's'
+                }
+            },
+            'F': {
+                'sprite': 'stone',
+                'stitches': {
+                    'up': 's',
+                    'left': 's'
+                }
+            },
+            '7': {
+                'sprite': 'stone',
+                'stitches': {
+                    'right': 's',
+                    'up': 's'
+                }
+            },
+            'L': {
+                'sprite': 'stone',
+                'stitches': {
+                    'left': 's',
+                    'down': 's'
+                }
+            },
+            'J': {
+                'sprite': 'stone',
+                'stitches': {
+                    'right': 's',
+                    'down': 's'
+                }
+            },
         }
     },
     {

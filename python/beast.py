@@ -16,6 +16,8 @@ class Beast(object):
         self.also_beasts = []
         self.absolute_id = False
         self.dimension = None
+        self.x = 0
+        self.y = 0
 
     @property
     def all(self):

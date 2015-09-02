@@ -73,7 +73,10 @@ def init_beast(custom_data, id_prepend=''):
     beast.id = uuid.uuid4().hex
 
     for key, value in custom_data.items():
-        setattr(beast, key, value)
+        if isinstance(value, dict):
+            setattr(beast, key, dict(value.items()))
+        else:
+            setattr(beast, key, value)
     if id_prepend and not beast.absolute_id:
         beast.id = '%s_%s' % (id_prepend, beast.id)
     beast.type = custom_data.get('type', None)
@@ -102,6 +105,8 @@ def initialize_grid(map_data, id_prepend=''):
             if 'sprite' not in custom_data:
                 custom_data['sprite'] = sprites.get(symbol, 'void')
             beast = init_beast(custom_data, id_prepend)
+            beast.x = x
+            beast.y = y
             beast_map.set(x, y, beast)
             for beast_data in custom_data.get('also', []):
                 if inspect.isfunction(beast_data):
@@ -305,9 +310,28 @@ def generate(maps):
             wall.down = wall
         if adjacent == 'd':
             wall.up = wall
-    for stitched in customs['stitched']:
+
+    for extender in customs['portal_extender']:
+        base = all_beasts.get(extender.base_id)
+        offset_x = base.x - extender.x
+        offset_y = base.y - extender.y
+        rel_string = ''
+        if offset_x > 0:
+            rel_string += 'r' * offset_x
+        if offset_x < 0:
+            rel_string += 'l' * (offset_x * -1)
+        if offset_y > 0:
+            rel_string += 'u' * offset_y
+        if offset_y < 0:
+            rel_string += 'd' * (offset_y * -1)
+        for key in base.stitches.keys():
+            extender.stitches[key] = base.stitches[key] + rel_string
+            print extender.stitches[key]
+
+    for stitched in all_beasts.values():
         stitches = stitched.stitches
-        stitch(stitched, all_beasts, stitches.get('up', ''), stitches.get('down', ''), stitches.get('left', ''), stitches.get('right', ''), stitches.get('inner', ''))
+        if stitches:
+            stitch(stitched, all_beasts, stitches.get('up', ''), stitches.get('down', ''), stitches.get('left', ''), stitches.get('right', ''), stitches.get('inner', ''))
     for origin in customs['rill_origin']:
         rills = customs['rill']
         rill_path = [origin]
