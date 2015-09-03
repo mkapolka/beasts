@@ -26,7 +26,7 @@ def lurker(sprite, watching_id, direction, reciprocate=True, absolute_lurker_id=
         'dimension': {
             'data': [
                 '###',
-                '#l#',
+                '#lh',
                 '#_#',
                 '___',
             ],
@@ -40,11 +40,15 @@ def lurker(sprite, watching_id, direction, reciprocate=True, absolute_lurker_id=
                     'absolute_id': absolute_lurker_id,
                     'type': 'lurker',
                     'sprite': sprite,
-                    'stitches': {
-                        'right': ('%s//%s' % (watching_id, 'r' if reciprocate else '')) if watching_id else '',
-                    },
-                    'song': 'ibi wowo ema tut wowo wo, beh wo ro%s' % direction
+                    'song': 'ibi wowo ema tut wowo wo, ibi rorowo roro beh wo roro'
                 },
+                'h': {
+                    'sprite': 'glove',
+                    'song': 'tut ro bo%s' % direction,
+                    'stitches': {
+                        'up': ('%s//%s' % (watching_id, 'r' if reciprocate else '')) if watching_id else '',
+                    }
+                }
             }
         }
     }
@@ -105,12 +109,9 @@ def mushroom_pocket():
         'type': 'pocket',
         'dimension': {
             'data': [
-                '#####',
-                '#_d_#',
-                '#___#',
-                '#___#',
                 '##_##',
                 '##_##',
+                '__d__',
                 '##_##',
                 'vvevv',
             ],
@@ -133,14 +134,51 @@ def mushroom_pocket():
                 'd': {
                     'id': 'start',
                     'sprite': 'bog',
-                    'also': [{
-                        'id': 'beetle',
-                        'sprite': 'necromancy',
-                        'song': 'ibi popo po tut po bo, tut po popo',
-                        'stitches': {
-                            'down': '%s_start/' % (ground_id),
-                            'up': '%s_start/' % ground_id
-                        }},
+                    'also': [
+                        {
+                            'id': 'beetle',  # Head
+                            'sprite': 'necromancy',
+                            'song': 'tut po ropo',
+                            'stitches': {
+                                # 'right': '%s_resetter//r' % ground_id
+                                'right': '%s_body//r' % ground_id
+                            }
+                        },
+                        {
+                            'id': 'body',  # Body
+                            'sprite': 'fire',
+                            'song': 'tut po popo',
+                            'stitches': {
+                                'right': '%s_resetter//r' % ground_id,
+                            }
+                        },
+                        {
+                            'id': 'body2',
+                            'sprite': 'transmutation',
+                            'song': 'tut ro popo',
+                            'stitches': {
+                                'down': '%s_body//r' % ground_id,
+                                'up': '%s_butt//r' % ground_id
+                            }
+                        },
+                        {
+                            'id': 'butt',  # Body
+                            'sprite': 'purple',
+                            'song': 'tut bo poro',
+                            'stitches': {
+                                'right': '%s_resetter//r' % ground_id
+                            }
+                        },
+                        {
+                            'id': 'resetter',
+                            'sprite': 'glove',
+                            'song': 'ibi gobo ropo tut ropo bo',
+                            'stitches': {
+                                'left': '%s_butt/' % ground_id,
+                                'right': '%s_body/' % ground_id,
+                                'up': '%s_start/' % ground_id,
+                            }
+                        },
                         lurker('beetle', '%s_beetle' % ground_id, 'po')
                     ],
                     'stitches': {
@@ -160,7 +198,7 @@ def mushroom_pocket():
                 'down': '%s/' % ground_id,
                 'up': '%s_entrance/' % (ground_id),
             }},
-            lurker('mushroom_pink', inner_id, 'po')
+            lurker('mushroom_pink', inner_id, 'po', False)
         ],
         'stitches': {
             'up': '%s//c' % inner_id,
@@ -275,6 +313,7 @@ maps = [
             "########################",
         ],
         'legend': {
+            '#': {'type': 'wall', 'sprite': 'stone'},
             'b': {
                 'type': 'teleporter',
                 'id': 'boogie',
@@ -424,11 +463,11 @@ maps = [
             '~___r____f___r_r_________~',
             '~e__r________r_r_rrrrrr__~',
             '~___rrrrr_rrrr_rrr____r__~',
-            '~_______r_r______#BBB#r__~',
-            '~__rrrr_r_rrrr___1###/r__~',
+            '~_______r_r______#=P=#r__~',
+            '~__rrrr_r_rrrr___|###/r__~',
             '~__r__rrr____r___R###Gr__~',
-            '~_rr_____rrrrr___2###/rr_~',
-            '~_r_rrrr_r_______#PPP#_r_~',
+            '~_rr_____rrrrr___|###/rr_~',
+            '~_r_rrrr_r_______#-B-#_r_~',
             '~_rrr__r_r_rrr_rrr____rr_~',
             '~______r_r_r_r_r_r___rr__~',
             'rrrrrrrr_rrr_r_r_r__rr___~',
@@ -448,6 +487,11 @@ maps = [
                     'right': 'red_room_entrance/'
                 }
             },
+            '|': {
+                'sprite': 'fire',
+                'type': 'portal_extender',
+                'base_id': 'rill_red'
+            },
             'G': {
                 'id': 'rill_green',
                 'sprite': 'poison',
@@ -460,35 +504,62 @@ maps = [
                 'type': 'portal_extender',
                 'base_id': 'rill_green',
             },
-            '1': {
-                'sprite': 'fire',
+            'B': {
+                'id': 'rill_blue',
+                'sprite': 'ice',
                 'stitches': {
-                    'right': 'red_room_entrance/u'
+                    'up': 'blue_room_entrance/'
                 }
             },
-            '2': {
-                'sprite': 'fire',
+            '-': {
+                'sprite': 'ice',
+                'type': 'portal_extender',
+                'base_id': 'rill_blue'
+            },
+            'P': {
+                'id': 'rill_purple',
+                'sprite': 'purple',
                 'stitches': {
-                    'right': 'red_room_entrance/d'
+                    'down': 'purple_room_entrance/'
                 }
+            },
+            '=': {
+                'sprite': 'purple',
+                'type': 'portal_extender',
+                'base_id': 'rill_purple'
             },
         }
     },
-    {
+    {  # Within the rillstone
         'data': [
-            'F^^7#^^^',
-            '|rr><gg/',
-            'Rrr><ggG',
-            '|rr><gg/',
-            'LvvJ<vvv',
-            '<pp><^^>',
-            '<pp><bb>',
-            '<pp><bb>',
-            '<pp><bb>',
-            'LvvJ<bb>',
+            '######################',
+            '#########=P=##########',
+            '#########ppp##########',
+            '#########ppp##########',
+            '##########p###########',
+            '##########p###########',
+            '##########p###########',
+            '##########p###########',
+            '########______########',
+            '|rr#####______#####gg/',
+            'Rrrrrrrr__t___gggggggG',
+            '|rr#####______#####gg/',
+            '########______########',
+            '###########bbbbbbbb###',
+            '###########b######bbb#',
+            '###########b##bbbb##b#',
+            '##########bbb#b#####b#',
+            '##########bbb#bbbbbbb#',
+            '##########-B-#########',
         ],
         'legend': {
-            '#': {'sprite': 'stone'},
+            '_': {
+                'sprite': 'cobble'
+            },
+            '#': {
+                'sprite': 'void',
+                'type': 'wall'
+            },
             'r': {'sprite': 'fire'},
             'R': {
                 'id': 'red_room_entrance',
@@ -497,6 +568,12 @@ maps = [
                     'left': 'rill_red/'
                 }
             },
+            '|': {
+                'sprite': 'fire',
+                'type': 'portal_extender',
+                'base_id': 'red_room_entrance',
+            },
+            'g': {'sprite': 'poison'},
             'G': {
                 'id': 'green_room_entrance',
                 'sprite': 'poison',
@@ -509,66 +586,37 @@ maps = [
                 'type': 'portal_extender',
                 'base_id': 'green_room_entrance',
             },
-            '|': {
-                'sprite': 'fire',
-                'type': 'portal_extender',
-                'base_id': 'red_room_entrance',
-            },
             'b': {'sprite': 'ice'},
-            'g': {'sprite': 'poison'},
+            'B': {
+                'id': 'blue_room_entrance',
+                'sprite': 'ice',
+                'stitches': {
+                    'down': 'rill_blue/',
+                }
+            },
+            '-': {
+                'sprite': 'ice',
+                'type': 'portal_extender',
+                'base_id': 'blue_room_entrance'
+            },
             'p': {'sprite': 'purple'},
-            '>': {
-                'sprite': 'stone',
+            'P': {
+                'id': 'purple_room_entrance',
+                'sprite': 'purple',
                 'stitches': {
-                    'right': 's'
+                    'up': 'rill_purple/',
                 }
             },
-            '<': {
-                'sprite': 'stone',
-                'stitches': {
-                    'left': 's'
-                }
+            '=': {
+                'sprite': 'purple',
+                'type': 'portal_extender',
+                'base_id': 'purple_room_entrance'
             },
-            '^': {
-                'sprite': 'stone',
-                'stitches': {
-                    'up': 's'
-                }
-            },
-            'v': {
-                'sprite': 'stone',
-                'stitches': {
-                    'down': 's'
-                }
-            },
-            'F': {
-                'sprite': 'stone',
-                'stitches': {
-                    'up': 's',
-                    'left': 's'
-                }
-            },
-            '7': {
-                'sprite': 'stone',
-                'stitches': {
-                    'right': 's',
-                    'up': 's'
-                }
-            },
-            'L': {
-                'sprite': 'stone',
-                'stitches': {
-                    'left': 's',
-                    'down': 's'
-                }
-            },
-            'J': {
-                'sprite': 'stone',
-                'stitches': {
-                    'right': 's',
-                    'down': 's'
-                }
-            },
+            't': {
+                'sprite': 'cobble',
+                'type': 'teleporter',
+                'to_id': 'triangle'
+            }
         }
     },
     {
@@ -638,4 +686,34 @@ maps = [
         },
         'wrap_mode': 'looped'
     },
+    {
+        'data': [
+            '^^^^1',
+            'e##2_',
+            '##3__',
+            '#4___',
+            '5____',
+        ],
+        'wrap_mode': 'looped',
+        'legend': {
+            'e': {
+                'id': 'triangle',
+                'sprite': 'cobble'
+            },
+            '#': {
+                'sprite': 'cobble'
+            },
+            '1': {'sprite': 'stone', 'stitches': {'down': '/ld/', 'up': 'triangle_bottom//r'}},
+            '2': {'sprite': 'stone', 'stitches': {'right': '/lll/r', 'down': '/ld/'}},
+            '3': {'sprite': 'stone', 'stitches': {'right': '/ll/r', 'down': '/ld/'}},
+            '4': {'sprite': 'stone', 'stitches': {'right': '/l/r', 'down': '/ld/'}},
+            '5': {'id': 'triangle_bottom', 'sprite': 'stone', 'stitches': {'right': '/s/r', 'down': '/ld/'}},
+            '^': {
+                'sprite': 'cobble',
+                'stitches': {
+                    'up': 'triangle_bottom/'
+                }
+            }
+        }
+    }
 ]

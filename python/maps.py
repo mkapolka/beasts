@@ -216,10 +216,10 @@ def calc_stitch_string(beast, string, all_beasts):
     if len(parts) == 1:
         dirs = string
     elif len(parts) == 2:
-        current = all_beasts[parts[0]]
+        current = all_beasts.get(parts[0], current)
         dirs = parts[1]
     elif len(parts) == 3:
-        current = all_beasts[parts[0]]
+        current = all_beasts.get(parts[0], current)
         dirs = parts[1]
         flags = parts[2]
 
@@ -302,6 +302,12 @@ def generate(maps):
             'u' if wall.up.type != 'wall' else '',
             'd' if wall.down.type != 'wall' else '',
         )
+        corners = '%s%s%s%s' % (
+            'F' if wall.left.up.type != 'wall' else '',
+            'J' if wall.right.down.type != 'wall' else '',
+            '7' if wall.right.up.type != 'wall' else '',
+            'L' if wall.left.down.type != 'wall' else '',
+        )
         if adjacent == 'l':
             wall.right = wall
         if adjacent == 'r':
@@ -311,15 +317,28 @@ def generate(maps):
         if adjacent == 'd':
             wall.up = wall
 
+        if not adjacent and corners == 'F':
+            wall.right = wall
+            wall.down = wall
+        if not adjacent and corners == 'J':
+            wall.left = wall
+            wall.up = wall
+        if not adjacent and corners == '7':
+            wall.left = wall
+            wall.down = wall
+        if not adjacent and corners == 'L':
+            wall.right = wall
+            wall.up = wall
+
     for extender in customs['portal_extender']:
         base = all_beasts.get(extender.base_id)
         offset_x = base.x - extender.x
         offset_y = base.y - extender.y
         rel_string = ''
         if offset_x > 0:
-            rel_string += 'r' * offset_x
+            rel_string += 'l' * offset_x
         if offset_x < 0:
-            rel_string += 'l' * (offset_x * -1)
+            rel_string += 'r' * (offset_x * -1)
         if offset_y > 0:
             rel_string += 'u' * offset_y
         if offset_y < 0:

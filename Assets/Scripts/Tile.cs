@@ -8,6 +8,7 @@ public class Tile : MonoBehaviour {
 
   public void Render(Beast center) {
     Beast current = center;
+
     Vector3 target = this.transform.position;
 
     int dy = (int)(target.y);
@@ -32,6 +33,7 @@ public class Tile : MonoBehaviour {
       }
     }
 
+    this.beast = current;
     this.GetComponent<SpriteRenderer>().sprite = current.sprite;
     this.GetComponent<SpriteRenderer>().color = current.color;
     if (current.inner != current) {
@@ -40,5 +42,11 @@ public class Tile : MonoBehaviour {
     } else {
       this.inner.sprite = null;
     }
+  }
+
+  public void OnMouseDown() {
+    GameManager gm = FindObjectOfType<GameManager>();
+    gm.playerBeast.inner = this.beast;
+    gm.RefreshScreen();
   }
 }
