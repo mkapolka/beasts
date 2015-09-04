@@ -42,6 +42,29 @@ public class Tile : MonoBehaviour {
     } else {
       this.inner.sprite = null;
     }
+
+    this.UpdateLeyLines();
+  }
+
+  public void UpdateLeyLines() {
+    LeyLine line = this.GetComponent<LeyLine>();
+    if (line) {
+      line.color = this.beast.color;
+      line.ClearPath();
+      string song = this.beast.song;
+
+      string[] phrases = song.Split(',');
+      foreach (string phrase in phrases) {
+        string[] words = phrase.Split(' ');
+        string command = words[0].Trim();
+        if (command == "tut") {
+          Beast.BeastLink from = Beast.BeastLink.ParseRelative(this.beast, words[1].Trim());
+          Beast.BeastLink to = Beast.BeastLink.ParseRelative(this.beast, words[2].Trim());
+          line.SetPath(from);
+          line.SetPath(to);
+        }
+      }
+    }
   }
 
   public void OnMouseDown() {

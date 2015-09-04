@@ -160,6 +160,7 @@ public class GameManager : MonoBehaviour {
   }
 
   public void UISing(string song) {
+    //this.centerTile.GetComponent<LeyLine>().SetPath(Beast.BeastLink.ParseRelative(this.playerBeast.inner, song));
     this.playerBeast.Sing(song);
     this.lurkerBeast.Sing();
     this.RefreshScreen();
