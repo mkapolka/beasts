@@ -37,16 +37,47 @@ public class Beast {
   }
 
   public class BeastLink {
+    public Beast origin;
     public Beast beast;
-    public string direction;
+    public string[] directions;
 
-    public BeastLink(Beast beast, string direction) {
-      this.beast = beast;
-      this.direction = direction;
+    public BeastLink(Beast origin, string[] directions) {
+      this.origin = origin;
+      this.directions = directions;
+      this.populateBeast();
+    }
+
+    public string getLastDirection() {
+      return this.directions[this.directions.Length - 1];
+    }
+
+    private void populateBeast() {
+      Beast start = this.origin;
+      foreach (string direction in this.directions) {
+        this.beast = start;
+        start = this.hop(start, direction);
+      }
+    }
+
+    private Beast hop(Beast beast, string direction) {
+      switch (direction) {
+        case "up":
+          return beast.up;
+        case "down":
+          return beast.down;
+        case "left":
+          return beast.left;
+        case "right":
+          return beast.right;
+        case "inner":
+          return beast.inner;
+        default:
+          return beast;
+      }
     }
 
     public void set(Beast v) {
-      switch (this.direction) {
+      switch (this.getLastDirection()) {
         case "up":
           this.beast.up = v;
         break;
@@ -74,20 +105,7 @@ public class Beast {
     }
 
     public Beast get() {
-      switch (this.direction) {
-        case "up":
-          return this.beast.up;
-        case "down":
-          return this.beast.down;
-        case "left":
-          return this.beast.left;
-        case "right":
-          return this.beast.right;
-        case "inner":
-          return this.beast.inner;
-        default:
-          return this.beast;
-      }
+      return this.hop(this.beast, this.getLastDirection());
     }
 
     public BeastLink invert() {
@@ -95,60 +113,61 @@ public class Beast {
     }
 
     public BeastLink reciprocate(BeastLink other) {
-      BeastLink output = new BeastLink(this.get(), "");
-      switch (other.direction) {
+      string direction = null;
+      switch (other.getLastDirection()) {
         case "up":
-          output.direction = "down";
+          direction = "down";
         break;
         case "down":
-          output.direction = "up";
+          direction = "up";
         break;
         case "left":
-          output.direction = "right";
+          direction = "right";
         break;
         case "right":
-          output.direction = "left";
+          direction = "left";
         break;
         case "inner":
-          output.direction = "inner";
+          direction = "inner";
         break;
       }
-      return output;
+      return new BeastLink(this.get(), new string[]{direction});
     }
 
     public BeastLink extend() {
-      return new BeastLink(this.get(), this.direction);
-    }
-  }
-
-  public Beast.BeastLink ParseRelative(string word) {
-    BeastLink current = new Beast.BeastLink(this, "self");
-    if (word == "ema") {
-      return current;
+      return new BeastLink(this.get(), new string[]{this.getLastDirection()});
     }
 
-    while (word.Length > 0) {
-      if (word.StartsWith("ro")) {
-        current = new Beast.BeastLink(current.get(), "right");
-        word = word.Substring(2);
-      } else if (word.StartsWith("go")) {
-        current = new Beast.BeastLink(current.get(), "left");
-        word = word.Substring(2);
-      } else if (word.StartsWith("bo")) {
-        current = new Beast.BeastLink(current.get(), "up");
-        word = word.Substring(2);
-      } else if (word.StartsWith("po")) {
-        current = new Beast.BeastLink(current.get(), "down");
-        word = word.Substring(2);
-      } else if (word.StartsWith("wo")) {
-        current = new Beast.BeastLink(current.get(), "inner");
-        word = word.Substring(2);
-      } else {
-        throw new System.Exception("Invalid selector: " + word);
+    public static BeastLink ParseRelative(Beast origin, string word) {
+      List<string> words = new List<string>();
+
+      while (word.Length > 0) {
+        if (word.StartsWith("ro")) {
+          words.Add("right");
+          word = word.Substring(2);
+        } else if (word.StartsWith("go")) {
+          words.Add("left");
+          word = word.Substring(2);
+        } else if (word.StartsWith("bo")) {
+          words.Add("up");
+          word = word.Substring(2);
+        } else if (word.StartsWith("po")) {
+          words.Add("down");
+          word = word.Substring(2);
+        } else if (word.StartsWith("wo")) {
+          words.Add("inner");
+          word = word.Substring(2);
+        } else if (word.StartsWith("ema")) {
+          words.Add("self");
+          word = word.Substring(3);
+        } else {
+          throw new System.Exception("Invalid selector: " + word);
+        }
       }
+      return new BeastLink(origin, words.ToArray());
     }
-    return current;
   }
+
 
   public void LinkReciprocally(BeastLink from, BeastLink to) {
     from.reciprocate(to).set(to.beast);
@@ -161,34 +180,34 @@ public class Beast {
     string command = parts[0];
     switch (command) {
       case "tut":
-        Beast.BeastLink to_name = this.ParseRelative(parts[1]);
-        Beast.BeastLink from_name = this.ParseRelative(parts[2]);
+        Beast.BeastLink to_name = BeastLink.ParseRelative(this, parts[1]);
+        Beast.BeastLink from_name = BeastLink.ParseRelative(this, parts[2]);
         to_name.set(from_name.get());
       break;
 
       case "vux":
-        to_name = this.ParseRelative(parts[1]);
-        from_name = this.ParseRelative(parts[2]);
+        to_name = BeastLink.ParseRelative(this, parts[1]);
+        from_name = BeastLink.ParseRelative(this, parts[2]);
         Beast a = to_name.get();
         to_name.set(from_name.get());
         from_name.set(a);
       break;
 
       case "beh":
-        to_name = this.ParseRelative(parts[1]);
-        from_name = this.ParseRelative(parts[2]);
+        to_name = BeastLink.ParseRelative(this, parts[1]);
+        from_name = BeastLink.ParseRelative(this, parts[2]);
         this.LinkReciprocally(from_name, to_name);
       break;
 
       case "puk":
-        to_name = this.ParseRelative(parts[1]);
+        to_name = BeastLink.ParseRelative(this, parts[1]);
         from_name = to_name.extend();
         this.LinkReciprocally(from_name, to_name);
       break;
 
       case "yuk":
-        to_name = this.ParseRelative(parts[1]);
-        from_name = this.ParseRelative(parts[1]);
+        to_name = BeastLink.ParseRelative(this, parts[1]);
+        from_name = BeastLink.ParseRelative(this, parts[1]);
         BeastLink second = to_name.extend().invert();
         this.LinkReciprocally(from_name, to_name);
         this.LinkReciprocally(second, from_name);
@@ -196,8 +215,8 @@ public class Beast {
 
       case "heen": //heen wo woro = my wo becomes woro, woro's wo becomes ema
         // Reciprocal tut, tut back & clear previous
-        to_name = this.ParseRelative(parts[1]);
-        from_name = this.ParseRelative(parts[2]);
+        to_name = BeastLink.ParseRelative(this, parts[1]);
+        from_name = BeastLink.ParseRelative(this, parts[2]);
 
         to_name.invert().set(to_name.invert().beast);
         from_name.reciprocate(to_name).invert().set(from_name.reciprocate(to_name).get());
@@ -207,8 +226,8 @@ public class Beast {
       break;
 
       case "suj":
-        Beast to = this.ParseRelative(parts[1]).get();
-        Beast from = this.ParseRelative(parts[2]).get();
+        Beast to = BeastLink.ParseRelative(this, parts[1]).get();
+        Beast from = BeastLink.ParseRelative(this, parts[2]).get();
         to.up = from.up;
         to.down = from.down;
         to.left = from.left;
@@ -218,8 +237,8 @@ public class Beast {
 
       case "bib":
       case "ibi":
-        a = this.ParseRelative(parts[1]).get();
-        Beast b = this.ParseRelative(parts[2]).get();
+        a = BeastLink.ParseRelative(this, parts[1]).get();
+        Beast b = BeastLink.ParseRelative(this, parts[2]).get();
         if (command == "ibi" ? a == b : a != b) {
           List<string> remaining = new List<string>(parts);
           remaining.RemoveRange(0, 3);
@@ -229,8 +248,8 @@ public class Beast {
       break;
 
       case "sujux":
-        to = this.ParseRelative(parts[1]).get();
-        from = this.ParseRelative(parts[2]).get();
+        to = BeastLink.ParseRelative(this, parts[1]).get();
+        from = BeastLink.ParseRelative(this, parts[2]).get();
         Beast tou = to.up;
         Beast tod = to.down;
         Beast tol = to.left;
@@ -253,7 +272,7 @@ public class Beast {
   public void Sing(string song) {
     string[] parts = song.Split(' ');
     if (parts[0] == "qub") {
-      Beast.BeastLink student = this.ParseRelative(parts[1]);
+      Beast.BeastLink student = BeastLink.ParseRelative(this, parts[1]);
       List<string> remaining = new List<string>(parts);
       remaining.RemoveRange(0, 2);
       string to_teach = string.Join(" ", remaining.ToArray());
