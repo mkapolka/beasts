@@ -1,13 +1,13 @@
 fileFormatVersion: 2
 guid: 07f501d283a914f27953d6fdb9b4b566
-timeCreated: 1441381659
+timeCreated: 1441421372
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: vertical
-    21300002: horizontal
+    21300000: start
+    21300002: end
     21300004: leylines_2
-    21300006: leylines_3
+    21300006: continue
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -53,7 +53,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: vertical
+    - name: start
       rect:
         serializedVersion: 2
         x: 0
@@ -63,7 +63,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: horizontal
+    - name: end
       rect:
         serializedVersion: 2
         x: 32
@@ -83,7 +83,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: leylines_3
+    - name: continue
       rect:
         serializedVersion: 2
         x: 32

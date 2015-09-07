@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
   public const float MOVE_TIME = .1f;
-  public const float TICK_TIME = .2f;
+  public const float TICK_TIME = 1.0f;
 
   public static List<Beast> withSongs = new List<Beast>();
 
@@ -66,9 +66,9 @@ public class GameManager : MonoBehaviour {
     this.RefreshScreen();
   }
 
-  public void RefreshScreen() {
+  public void RefreshScreen(bool doAnimations = false) {
     foreach (Tile tile in GameObject.FindObjectsOfType<Tile>()) {
-      tile.Render(this.playerBeast.inner);
+      tile.Render(this.playerBeast.inner, doAnimations);
     }
     this.upImage.sprite = this.playerBeast.up.sprite;
     this.downImage.sprite = this.playerBeast.down.sprite;
@@ -140,7 +140,7 @@ public class GameManager : MonoBehaviour {
     if (this.tickTimer < 0) {
       this.tickTimer = GameManager.TICK_TIME;
       this.Tick();
-      this.RefreshScreen();
+      this.RefreshScreen(true);
     }
   }
 

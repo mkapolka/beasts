@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 public class LeyLine : MonoBehaviour {
 
-  public Sprite horizontalSprite;
-  public Sprite verticalSprite;
+  public GameObject startSprite;
+  public GameObject endSprite;
+  public GameObject continueSprite;
   public Color color;
 
   public GameObject spritePrefab;
@@ -20,37 +21,68 @@ public class LeyLine : MonoBehaviour {
     this.pathParts = new List<GameObject>();
   }
 
-	public void SetPath(Beast.BeastLink link) {
+  public void AddTutPath(Beast.BeastLink from, Beast.BeastLink to) {
+    this.AddPath(to, this.endSprite, this.continueSprite, this.continueSprite, this.endSprite);
+    this.AddPath(from, this.continueSprite, this.continueSprite, this.startSprite, this.startSprite);
+  }
+
+	public void AddPath(Beast.BeastLink link, GameObject startSprite, GameObject continueSprite, GameObject endSprite, GameObject onlySprite = null) {
+    if (onlySprite == null) {
+      onlySprite = startSprite;
+    }
+
     this.link = link;
 
     Vector3 currentPosition = this.transform.position;
 
-    foreach (string direction in link.directions) {
+    for (int i = 0; i < link.directions.Length; i++) {
+      GameObject sprite = onlySprite;
+      if (link.directions.Length != 1) {
+        if (i == 0) {
+          sprite = startSprite;
+        } else if (i == link.directions.Length - 1) {
+          sprite = endSprite;
+        } else {
+          sprite = continueSprite;
+        }
+      }
+
+      Vector3 rotation = new Vector3();
+      Vector3 position = new Vector3();
+      string direction = link.directions[i];
       switch (direction) {
         case "left":
-          this.AddLink(this.horizontalSprite, currentPosition + new Vector3(-0.5f, 0, 0));
+          rotation = new Vector3(0, 0, 180);
+          position = currentPosition + new Vector3(-0.5f, 0, 0);
+          this.AddLink(sprite, rotation, position);
           currentPosition += new Vector3(-1, 0, 0);
         break;
         case "right":
-          this.AddLink(this.horizontalSprite, currentPosition + new Vector3(0.5f, 0, 0));
+          rotation = new Vector3(0, 0, 0);
+          position = currentPosition + new Vector3(0.5f, 0, 0);
+          this.AddLink(sprite, rotation, position);
           currentPosition += new Vector3(1, 0, 0);
         break;
         case "up":
-          this.AddLink(this.verticalSprite, currentPosition + new Vector3(0, 0.5f, 0));
+          rotation = new Vector3(0, 0, 90);
+          position = currentPosition + new Vector3(0, 0.5f, 0);
+          this.AddLink(sprite, rotation, position);
           currentPosition += new Vector3(0, 1, 0);
         break;
         case "down":
-          this.AddLink(this.verticalSprite, currentPosition + new Vector3(0, -0.5f, 0));
+          rotation = new Vector3(0, 0, 270);
+          position = currentPosition + new Vector3(0, -0.5f, 0);
+          this.AddLink(sprite, rotation, position);
           currentPosition += new Vector3(0, -1, 0);
         break;
       }
     }
   }
 
-  private void AddLink(Sprite sprite, Vector3 position) {
-    GameObject part = GameObject.Instantiate(this.spritePrefab, position, Quaternion.identity) as GameObject;
+  private void AddLink(GameObject prefab, Vector3 rotation, Vector3 position) {
+    GameObject part = GameObject.Instantiate(prefab, position, Quaternion.identity) as GameObject;
+    part.transform.eulerAngles = rotation;
     SpriteRenderer sr = part.GetComponent<SpriteRenderer>();
-    sr.sprite = sprite;
     sr.color = this.color;
     part.transform.SetParent(this.transform, true);
     pathParts.Add(part);
