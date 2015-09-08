@@ -8,8 +8,13 @@ public class Tile : MonoBehaviour {
   public SpriteRenderer newSprite;
   public SpriteRenderer oldSprite;
   public SpriteRenderer inner;
+  public LeyLine line;
 
   private Beast.BeastLink link;
+
+  public void Start() {
+    //this.SetLeyLineVisibility(false);
+  }
 
   public void Render(Beast center, bool doAnimations = false) {
     Beast current = center;
@@ -88,14 +93,13 @@ public class Tile : MonoBehaviour {
   }
 
   public void UpdateLeyLines() {
-    LeyLine line = this.GetComponent<LeyLine>();
-    if (line) {
-      float aFactor = Mathf.Max(1, this.transform.position.magnitude * 5);
+    if (this.line) {
+      /*float aFactor = Mathf.Max(1, this.transform.position.magnitude * 5);
       Color color = this.beast.color + new Color(0, 0, 0, 0);
       color.a = (1 / aFactor);
 
-      line.color = color;
-      line.ClearPath();
+      this.line.color = color;*/
+      this.line.ClearPath();
       string song = this.beast.song;
 
       string[] phrases = song.Split(',');
@@ -105,7 +109,7 @@ public class Tile : MonoBehaviour {
         if (command == "tut") {
           Beast.BeastLink to = Beast.BeastLink.ParseRelative(this.beast, words[1].Trim());
           Beast.BeastLink from = Beast.BeastLink.ParseRelative(this.beast, words[2].Trim());
-          line.AddTutPath(from, to);
+          this.line.AddTutPath(from, to);
         }
 
         if (command == "ibi") {
@@ -114,17 +118,31 @@ public class Tile : MonoBehaviour {
           string c2 = words[3];
           Beast.BeastLink c = Beast.BeastLink.ParseRelative(this.beast, words[4].Trim());
           Beast.BeastLink d = Beast.BeastLink.ParseRelative(this.beast, words[5].Trim());
-          line.AddIbiTutPath(a, b, d, c);
+          this.line.AddIbiTutPath(a, b, d, c);
         }
       }
     }
   }
 
-  public void OnMouseEnter() {
-    FindObjectOfType<GameManager>().MouseOver(this.link);
+  public void SetLeyLineVisibility(bool visible) {
+    if (visible) {
+      this.line.SetColor(this.beast.color + new Color(0, 0, 0, 1));
+    } else {
+      //this.line.SetColor(this.beast.color - new Color(0, 0, 0, 1));
+    }
+    this.line.SetVisible(visible);
   }
 
-  public void OnMouseDown() {
+  public void MouseOver() {
+    FindObjectOfType<GameManager>().MouseOver(this.link);
+    this.SetLeyLineVisibility(true);
+  }
+
+  public void MouseOut() {
+    this.SetLeyLineVisibility(false);
+  }
+
+  public void MouseUp() {
     GameManager gm = FindObjectOfType<GameManager>();
     gm.playerBeast.inner = this.beast;
     gm.RefreshScreen(true);

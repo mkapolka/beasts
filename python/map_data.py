@@ -41,7 +41,7 @@ def lurker(sprite, watching_id, direction, reciprocate=True, absolute_lurker_id=
                     'type': 'lurker',
                     'sprite': sprite,
                     'song': 'ibi wowo ema tut wowo wo, ibi rorowo roro beh wo roro',
-                    'tick_speed': 1 / 60,
+                    'tick_speed': 1.0 / 4,
                 },
                 'h': {
                     'sprite': 'glove',
@@ -49,7 +49,7 @@ def lurker(sprite, watching_id, direction, reciprocate=True, absolute_lurker_id=
                     'stitches': {
                         'up': ('%s//%s' % (watching_id, 'r' if reciprocate else '')) if watching_id else '',
                     },
-                    'tick_speed': 1 / 60,
+                    'tick_speed': 1.0 / 4,
                 }
             }
         }

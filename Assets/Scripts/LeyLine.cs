@@ -7,7 +7,8 @@ public class LeyLine : MonoBehaviour {
   public GameObject startSprite;
   public GameObject endSprite;
   public GameObject continueSprite;
-  public Color color;
+  public Color color = Color.white;
+  public Transform spriteParent;
 
   public GameObject spritePrefab;
 
@@ -22,11 +23,21 @@ public class LeyLine : MonoBehaviour {
   }
 
   public void Pulse() {
-    if (this.gameObject.name == "t0,0") {
-      print("asdfasdfadsf");
-    }
     foreach (GameObject go in this.pathParts) {
       go.GetComponent<Animator>().SetTrigger("Pulse");
+    }
+  }
+
+  public void SetVisible(bool visible) {
+    this.GetComponent<Animator>().SetBool("Visible", visible);
+  }
+
+  public void SetColor(Color c) {
+    this.color = c;
+    foreach (GameObject go in this.pathParts) {
+      foreach (SpriteRenderer sr in go.GetComponentsInChildren<SpriteRenderer>()) {
+        sr.color = this.color;
+      }
     }
   }
 
@@ -54,6 +65,8 @@ public class LeyLine : MonoBehaviour {
     this.link = link;
 
     Vector3 currentPosition = this.transform.position;
+    Vector3 preScale = this.spriteParent.transform.localScale;
+    this.spriteParent.transform.localScale = new Vector3(1, 1, 1);
 
     for (int i = 0; i < link.directions.Length; i++) {
       GameObject sprite = onlySprite;
@@ -97,6 +110,8 @@ public class LeyLine : MonoBehaviour {
         break;
       }
     }
+
+    this.spriteParent.transform.localScale = preScale;
   }
 
   private void AddLink(GameObject prefab, Vector3 rotation, Vector3 position) {
@@ -106,7 +121,7 @@ public class LeyLine : MonoBehaviour {
     foreach (SpriteRenderer sr in srs) {
       sr.color = this.color;
     }
-    part.transform.SetParent(this.transform, true);
+    part.transform.SetParent(this.spriteParent, true);
     pathParts.Add(part);
   }
 }

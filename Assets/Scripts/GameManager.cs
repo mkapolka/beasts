@@ -4,6 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
+  public enum MouseMode {
+    Move, Look
+  }
+
   public const float MOVE_TIME = .1f;
   public const float TICK_TIME = 1.0f;
 
@@ -165,7 +169,7 @@ public class GameManager : MonoBehaviour {
         beast.Sing();
         if (linkies.ContainsKey(beast)) {
           foreach (Tile tile in linkies[beast]) {
-            tile.GetComponent<LeyLine>().Pulse();
+            tile.line.Pulse();
           }
         }
       }
@@ -181,6 +185,26 @@ public class GameManager : MonoBehaviour {
     return null;
   }
 
+  public void ClickBorder(string which) {
+    switch (which) {
+      case "up":
+        this.playerBeast.Sing("tut wo bo");
+      break;
+      case "down":
+        this.playerBeast.Sing("tut wo po");
+      break;
+      case "left":
+        this.playerBeast.Sing("tut wo go");
+      break;
+      case "right":
+        this.playerBeast.Sing("tut wo ro");
+      break;
+    }
+
+    this.RefreshScreen(true);
+    this.PulseBorder();
+  }
+
   public void MouseOver(Beast.BeastLink link) {
     this.playerLey.MouseOverPath(link);
   }
@@ -191,7 +215,6 @@ public class GameManager : MonoBehaviour {
   }
 
   public void UISing(string song) {
-    //this.centerTile.GetComponent<LeyLine>().SetPath(Beast.BeastLink.ParseRelative(this.playerBeast.inner, song));
     this.playerBeast.Sing(song);
     this.lurkerBeast.Sing();
     this.RefreshScreen();
