@@ -40,14 +40,16 @@ def lurker(sprite, watching_id, direction, reciprocate=True, absolute_lurker_id=
                     'absolute_id': absolute_lurker_id,
                     'type': 'lurker',
                     'sprite': sprite,
-                    'song': 'ibi wowo ema tut wowo wo, ibi rorowo roro beh wo roro'
+                    'song': 'ibi wowo ema tut wowo wo, ibi rorowo roro beh wo roro',
+                    'tick_speed': 1 / 60,
                 },
                 'h': {
                     'sprite': 'glove',
                     'song': 'tut ro bo%s' % direction,
                     'stitches': {
                         'up': ('%s//%s' % (watching_id, 'r' if reciprocate else '')) if watching_id else '',
-                    }
+                    },
+                    'tick_speed': 1 / 60,
                 }
             }
         }
@@ -150,32 +152,33 @@ def mushroom_pocket():
                             'song': 'tut po popo',
                             'stitches': {
                                 'right': '%s_resetter//r' % ground_id,
+                                'up': '%s_butt//r' % ground_id,
                             }
                         },
+                        # {
+                            # 'id': 'body2',
+                            # 'sprite': 'transmutation',
+                            # 'song': 'tut ro popo',
+                            # 'tick_speed': .5,
+                            # 'stitches': {
+                                # 'down': '%s_body//r' % ground_id,
+                                # 'up': '%s_butt//r' % ground_id
+                            # }
+                        # },
                         {
-                            'id': 'body2',
-                            'sprite': 'transmutation',
-                            'song': 'tut ro popo',
-                            'stitches': {
-                                'down': '%s_body//r' % ground_id,
-                                'up': '%s_butt//r' % ground_id
-                            }
-                        },
-                        {
-                            'id': 'butt',  # Body
+                            'id': 'butt',
                             'sprite': 'purple',
-                            'song': 'tut bo poro',
+                            'song': 'tut bo popo',
                             'stitches': {
-                                'right': '%s_resetter//r' % ground_id
+                                'left': '%s_resetter//r' % ground_id
                             }
                         },
                         {
                             'id': 'resetter',
                             'sprite': 'glove',
-                            'song': 'ibi gobo ropo tut ropo bo',
+                            'song': 'ibi gopo robo tut gopo bo',
+                            'tick_speed': 2,
                             'stitches': {
-                                'left': '%s_butt/' % ground_id,
-                                'right': '%s_body/' % ground_id,
                                 'up': '%s_start/' % ground_id,
                             }
                         },

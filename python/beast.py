@@ -10,6 +10,7 @@ class Beast(object):
         self.inner = self
         self.symbol = symbol
         self.id = uuid.uuid4().hex
+        self.tick_speed = 1
         self.type = ''
         self.song = ''
         self.stitches = {}

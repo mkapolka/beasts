@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Tile : MonoBehaviour {
 
@@ -8,8 +9,11 @@ public class Tile : MonoBehaviour {
   public SpriteRenderer oldSprite;
   public SpriteRenderer inner;
 
+  private Beast.BeastLink link;
+
   public void Render(Beast center, bool doAnimations = false) {
     Beast current = center;
+    List<string> directions = new List<string>();
 
     Vector3 target = this.transform.position;
 
@@ -25,17 +29,20 @@ public class Tile : MonoBehaviour {
       f += v;
       while (f >= 1) {
         lastDirection = y_sign == 1 ? "up" : "down";
+        directions.Add(lastDirection);
         current = y_sign == 1 ? current.up : current.down;
         f -= 1;
       }
       current = x_sign == 1 ? current.right : current.left;
       lastDirection = x_sign == 1 ? "right" : "left";
+      directions.Add(lastDirection);
     }
 
     if (dx == 0) {
       for (int y = 0; y < dy * y_sign; y++) {
         current = y_sign == 1 ? current.up : current.down;
         lastDirection = y_sign == 1 ? "up" : "down";
+        directions.Add(lastDirection);
       }
     }
 
@@ -74,6 +81,7 @@ public class Tile : MonoBehaviour {
         }
       }
 
+      this.link = new Beast.BeastLink(center, directions.ToArray());
       this.UpdateLeyLines();
     }
 
@@ -82,7 +90,7 @@ public class Tile : MonoBehaviour {
   public void UpdateLeyLines() {
     LeyLine line = this.GetComponent<LeyLine>();
     if (line) {
-      float aFactor = Mathf.Max(1, this.transform.position.magnitude * 2);
+      float aFactor = Mathf.Max(1, this.transform.position.magnitude * 5);
       Color color = this.beast.color + new Color(0, 0, 0, 0);
       color.a = (1 / aFactor);
 
@@ -102,15 +110,24 @@ public class Tile : MonoBehaviour {
 
         if (command == "ibi") {
           Beast.BeastLink a = Beast.BeastLink.ParseRelative(this.beast, words[1].Trim());
-          Beast.BeastLink b = Beast.BeastLink.ParseRelative(this.beast, words[1].Trim());
+          Beast.BeastLink b = Beast.BeastLink.ParseRelative(this.beast, words[2].Trim());
+          string c2 = words[3];
+          Beast.BeastLink c = Beast.BeastLink.ParseRelative(this.beast, words[4].Trim());
+          Beast.BeastLink d = Beast.BeastLink.ParseRelative(this.beast, words[5].Trim());
+          line.AddIbiTutPath(a, b, d, c);
         }
       }
     }
   }
 
+  public void OnMouseEnter() {
+    FindObjectOfType<GameManager>().MouseOver(this.link);
+  }
+
   public void OnMouseDown() {
     GameManager gm = FindObjectOfType<GameManager>();
     gm.playerBeast.inner = this.beast;
-    gm.RefreshScreen();
+    gm.RefreshScreen(true);
+    gm.PulseBorder();
   }
 }

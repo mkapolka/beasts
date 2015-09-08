@@ -8,6 +8,8 @@ public class Beast {
   public Beast right;
   public Beast left;
   public Beast inner;
+  public float tickTime;
+  public float currentTickTime;
 
   public string song = null;
 
@@ -25,7 +27,7 @@ public class Beast {
 
   public void SetSong(string song) {
     this.song = song;
-    if (this.song != null) {
+    if (this.song != null && this.song.Trim() != "") {
       if (!GameManager.withSongs.Contains(this)) {
         GameManager.withSongs.Add(this);
       }

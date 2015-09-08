@@ -345,7 +345,6 @@ def generate(maps):
             rel_string += 'd' * (offset_y * -1)
         for key in base.stitches.keys():
             extender.stitches[key] = base.stitches[key] + rel_string
-            print extender.stitches[key]
 
     for stitched in all_beasts.values():
         stitches = stitched.stitches
@@ -391,6 +390,14 @@ if __name__ == "__main__":
     outfile = open('output.txt', 'w')
     beasts = generate(maps)
     for beast in beasts:
-        outfile.write(','.join([beast.id, beast.sprite, beast.right.id, beast.up.id, beast.left.id, beast.down.id, beast.inner.id, beast.song.replace(',', '/')]))
+        outfile.write(','.join([beast.id,
+                                beast.sprite,
+                                beast.right.id,
+                                beast.up.id,
+                                beast.left.id,
+                                beast.down.id,
+                                beast.inner.id,
+                                beast.song.replace(',', '/'),
+                                str(beast.tick_speed)]))
         outfile.write('\n')
     outfile.flush()

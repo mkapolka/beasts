@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour {
   public Image downImage;
   public Image leftImage;
   public Image rightImage;
+  public Animator borderAnimator;
+
+  public LeyLine playerLey;
 
   public Text tileSong;
 
@@ -54,6 +57,8 @@ public class GameManager : MonoBehaviour {
       b.down = this.beasts[parts[5]];
       b.inner = this.beasts[parts[6]];
       b.SetSong(parts[7].Replace('/', ','));
+      b.tickTime = float.Parse(parts[8]);
+      b.currentTickTime = float.Parse(parts[8]);
     }
 
     return this.beasts["player"];
@@ -134,19 +139,36 @@ public class GameManager : MonoBehaviour {
       if (reset) {
         this.moveTimer = GameManager.MOVE_TIME;
         this.lurkerBeast.Sing();
-        this.RefreshScreen();
+        this.PulseBorder();
+        this.RefreshScreen(true);
       }
     }
-    if (this.tickTimer < 0) {
-      this.tickTimer = GameManager.TICK_TIME;
-      this.Tick();
-      this.RefreshScreen(true);
-    }
+
+    this.Tick();
+    this.RefreshScreen(true);
   }
 
   public void Tick() {
+    Dictionary<Beast, List<Tile>> linkies = new Dictionary<Beast, List<Tile>>();
+    foreach (Tile tile in GameObject.FindObjectsOfType<Tile>()) {
+      if (!linkies.ContainsKey(tile.beast)) {
+        linkies.Add(tile.beast, new List<Tile>(new Tile[]{tile}));
+      } else {
+        linkies[tile.beast].Add(tile);
+      }
+    }
+
     foreach (Beast beast in GameManager.withSongs) {
-      beast.Sing();
+      beast.currentTickTime -= Time.deltaTime;
+      if (beast.currentTickTime < 0) {
+        beast.currentTickTime = beast.tickTime;
+        beast.Sing();
+        if (linkies.ContainsKey(beast)) {
+          foreach (Tile tile in linkies[beast]) {
+            tile.GetComponent<LeyLine>().Pulse();
+          }
+        }
+      }
     }
   }
 
@@ -159,10 +181,20 @@ public class GameManager : MonoBehaviour {
     return null;
   }
 
+  public void MouseOver(Beast.BeastLink link) {
+    this.playerLey.MouseOverPath(link);
+  }
+
+  public void PulseBorder() {
+    this.borderAnimator.SetTrigger("Pulse");
+    this.playerLey.Pulse();
+  }
+
   public void UISing(string song) {
     //this.centerTile.GetComponent<LeyLine>().SetPath(Beast.BeastLink.ParseRelative(this.playerBeast.inner, song));
     this.playerBeast.Sing(song);
     this.lurkerBeast.Sing();
     this.RefreshScreen();
+    this.PulseBorder();
   }
 }

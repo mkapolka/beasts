@@ -21,9 +21,29 @@ public class LeyLine : MonoBehaviour {
     this.pathParts = new List<GameObject>();
   }
 
+  public void Pulse() {
+    if (this.gameObject.name == "t0,0") {
+      print("asdfasdfadsf");
+    }
+    foreach (GameObject go in this.pathParts) {
+      go.GetComponent<Animator>().SetTrigger("Pulse");
+    }
+  }
+
+  public void MouseOverPath(Beast.BeastLink path) {
+    this.ClearPath();
+    this.AddPath(path, this.continueSprite, this.continueSprite, this.endSprite, this.endSprite);
+  }
+
   public void AddTutPath(Beast.BeastLink from, Beast.BeastLink to) {
-    this.AddPath(to, this.endSprite, this.continueSprite, this.continueSprite, this.endSprite);
+    this.AddPath(to, this.continueSprite, this.continueSprite, this.endSprite, this.endSprite);
     this.AddPath(from, this.continueSprite, this.continueSprite, this.startSprite, this.startSprite);
+  }
+
+  public void AddIbiTutPath(Beast.BeastLink condA, Beast.BeastLink condB, Beast.BeastLink from, Beast.BeastLink to) {
+    this.AddPath(condA, this.continueSprite, this.continueSprite, this.startSprite, this.startSprite);
+    this.AddPath(condB, this.continueSprite, this.continueSprite, this.startSprite, this.startSprite);
+    this.AddTutPath(from, to);
   }
 
 	public void AddPath(Beast.BeastLink link, GameObject startSprite, GameObject continueSprite, GameObject endSprite, GameObject onlySprite = null) {
@@ -82,8 +102,10 @@ public class LeyLine : MonoBehaviour {
   private void AddLink(GameObject prefab, Vector3 rotation, Vector3 position) {
     GameObject part = GameObject.Instantiate(prefab, position, Quaternion.identity) as GameObject;
     part.transform.eulerAngles = rotation;
-    SpriteRenderer sr = part.GetComponent<SpriteRenderer>();
-    sr.color = this.color;
+    SpriteRenderer[] srs = part.GetComponentsInChildren<SpriteRenderer>();
+    foreach (SpriteRenderer sr in srs) {
+      sr.color = this.color;
+    }
     part.transform.SetParent(this.transform, true);
     pathParts.Add(part);
   }
