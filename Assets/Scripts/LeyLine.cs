@@ -11,25 +11,47 @@ public class LeyLine : MonoBehaviour {
   public Transform spriteParent;
 
   public GameObject spritePrefab;
+  public SpriteRenderer signalSprite;
+  private bool hasSprites = false;
+  private bool isVisible = false;
 
   private Beast.BeastLink link;
   private List<GameObject> pathParts = new List<GameObject>();
 
+  public void Start() {
+    this.SetVisible(false);
+  }
+
   public void ClearPath() {
+    this.SetHasSprites(false);
     foreach (GameObject part in this.pathParts) {
       GameObject.Destroy(part);
     }
     this.pathParts = new List<GameObject>();
   }
 
+  private void SetHasSprites(bool hasSprites) {
+    this.hasSprites = hasSprites;
+    if (this.signalSprite != null) {
+      this.signalSprite.color = new Color(1, 1, 1, hasSprites ? 1 : 0);
+    }
+  }
+
   public void Pulse() {
+    this.GetComponent<Animator>().SetTrigger("Pulse");
+
     foreach (GameObject go in this.pathParts) {
       go.GetComponent<Animator>().SetTrigger("Pulse");
     }
   }
 
   public void SetVisible(bool visible) {
-    this.GetComponent<Animator>().SetBool("Visible", visible);
+    this.isVisible = visible;
+    Animator animator = this.GetComponent<Animator>();
+    if (animator != null) {
+      animator.SetTrigger("ChangeVisible");
+      animator.SetBool("Visible", visible);
+    }
   }
 
   public void SetColor(Color c) {
@@ -61,6 +83,8 @@ public class LeyLine : MonoBehaviour {
     if (onlySprite == null) {
       onlySprite = startSprite;
     }
+
+    this.SetHasSprites(true);
 
     this.link = link;
 
