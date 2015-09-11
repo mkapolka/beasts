@@ -12,6 +12,7 @@ public class LeyLine : MonoBehaviour {
 
   public GameObject spritePrefab;
   public SpriteRenderer signalSprite;
+  public bool isPlayerLey;
   private bool hasSprites = false;
   private bool isVisible = false;
 
@@ -19,7 +20,7 @@ public class LeyLine : MonoBehaviour {
   private List<GameObject> pathParts = new List<GameObject>();
 
   public void Start() {
-    this.SetVisible(false);
+    this.SetVisible(this.isPlayerLey);
   }
 
   public void ClearPath() {
@@ -38,10 +39,15 @@ public class LeyLine : MonoBehaviour {
   }
 
   public void Pulse() {
-    this.GetComponent<Animator>().SetTrigger("Pulse");
+    Animator animator = this.GetComponent<Animator>();
+    if (this.hasSprites && animator != null) {
+      animator.SetTrigger("Pulse");
+    }
 
-    foreach (GameObject go in this.pathParts) {
-      go.GetComponent<Animator>().SetTrigger("Pulse");
+    if (this.isVisible) {
+      foreach (GameObject go in this.pathParts) {
+        go.GetComponent<Animator>().SetTrigger("Pulse");
+      }
     }
   }
 

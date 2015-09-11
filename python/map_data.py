@@ -139,7 +139,7 @@ def mushroom_pocket():
                     'also': [
                         {
                             'id': 'beetle',  # Head
-                            'sprite': 'necromancy',
+                            'sprite': 'head',
                             'song': 'tut po ropo',
                             'stitches': {
                                 # 'right': '%s_resetter//r' % ground_id
@@ -148,26 +148,16 @@ def mushroom_pocket():
                         },
                         {
                             'id': 'body',  # Body
-                            'sprite': 'fire',
+                            'sprite': 'foot',
                             'song': 'tut po popo',
                             'stitches': {
                                 'right': '%s_resetter//r' % ground_id,
                                 'up': '%s_butt//r' % ground_id,
                             }
                         },
-                        # {
-                            # 'id': 'body2',
-                            # 'sprite': 'transmutation',
-                            # 'song': 'tut ro popo',
-                            # 'tick_speed': .5,
-                            # 'stitches': {
-                                # 'down': '%s_body//r' % ground_id,
-                                # 'up': '%s_butt//r' % ground_id
-                            # }
-                        # },
                         {
                             'id': 'butt',
-                            'sprite': 'purple',
+                            'sprite': 'butt',
                             'song': 'tut bo popo',
                             'stitches': {
                                 'left': '%s_resetter//r' % ground_id
@@ -305,7 +295,7 @@ maps = [
             "########__##############",
             "########__f#############",
             "########__##############",
-            "########__##############",
+            "########__t#############",
             "########__##############",
             "###_T_______T_##########",
             "###_____X_____#####___##",
@@ -335,6 +325,8 @@ maps = [
             'f': teleporter('to_flower', 'flower_entrance'),
             'T': tree,
             'c': color_changer,
+            't': teleporter(None, 'tree_entrance')
+
         }
     },
     {
@@ -543,7 +535,7 @@ maps = [
             '##########p###########',
             '##########p###########',
             '##########p###########',
-            '########______########',
+            '########_____e########',
             '|rr#####______#####gg/',
             'Rrrrrrrr__t___gggggggG',
             '|rr#####______#####gg/',
@@ -619,6 +611,10 @@ maps = [
                 'sprite': 'cobble',
                 'type': 'teleporter',
                 'to_id': 'triangle'
+            },
+            'e': {
+                'type': 'teleporter',
+                'to_id': 'tree_entrance'
             }
         }
     },
@@ -720,3 +716,7 @@ maps = [
         }
     }
 ]
+
+from tree_place import data as tree_data
+
+maps.extend(tree_data)

@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour {
 
   public Text tileSong;
 
+  private bool leyLinesActive = true;
+
   public Beast LoadBeasts() {
     string data = Resources.Load<TextAsset>("output").text;
     string[] lines = data.Split('\n');
@@ -219,5 +221,12 @@ public class GameManager : MonoBehaviour {
     this.lurkerBeast.Sing();
     this.RefreshScreen();
     this.PulseBorder();
+  }
+
+  public void ClickEyeball() {
+    this.leyLinesActive = !this.leyLinesActive;
+    foreach (Tile tile in GameObject.FindObjectsOfType<Tile>()) {
+      tile.SetLeyLineEnabled(this.leyLinesActive);
+    }
   }
 }

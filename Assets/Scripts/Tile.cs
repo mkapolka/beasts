@@ -94,11 +94,7 @@ public class Tile : MonoBehaviour {
 
   public void UpdateLeyLines() {
     if (this.line) {
-      /*float aFactor = Mathf.Max(1, this.transform.position.magnitude * 5);
-      Color color = this.beast.color + new Color(0, 0, 0, 0);
-      color.a = (1 / aFactor);
-
-      this.line.color = color;*/
+      this.line.SetColor(this.beast.color);
       this.line.ClearPath();
       string song = this.beast.song;
 
@@ -125,12 +121,14 @@ public class Tile : MonoBehaviour {
   }
 
   public void SetLeyLineVisibility(bool visible) {
-    if (visible) {
-      this.line.SetColor(this.beast.color + new Color(0, 0, 0, 1));
-    } else {
-      //this.line.SetColor(this.beast.color - new Color(0, 0, 0, 1));
-    }
     this.line.SetVisible(visible);
+  }
+
+  public void SetLeyLineEnabled(bool enabled) {
+    this.line.gameObject.SetActive(enabled);
+    if (enabled) {
+      this.SetLeyLineVisibility(false);
+    }
   }
 
   public void MouseOver() {
