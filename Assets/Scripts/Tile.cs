@@ -10,7 +10,7 @@ public class Tile : MonoBehaviour {
   public SpriteRenderer inner;
   public LeyLine line;
 
-  private Beast.BeastLink link;
+  public Beast.BeastLink link;
 
   public void Start() {
     //this.SetLeyLineVisibility(false);
@@ -131,19 +131,19 @@ public class Tile : MonoBehaviour {
     }
   }
 
+  public void MouseDown() {
+    FindObjectOfType<MouseController>().TileMouseDown(this);
+  }
+
   public void MouseOver() {
-    FindObjectOfType<GameManager>().MouseOver(this.link);
-    this.SetLeyLineVisibility(true);
+    FindObjectOfType<MouseController>().TileMouseOver(this);
   }
 
   public void MouseOut() {
-    this.SetLeyLineVisibility(false);
+    FindObjectOfType<MouseController>().TileMouseOut(this);
   }
 
   public void MouseUp() {
-    GameManager gm = FindObjectOfType<GameManager>();
-    gm.playerBeast.inner = this.beast;
-    gm.RefreshScreen(true);
-    gm.PulseBorder();
+    FindObjectOfType<MouseController>().TileMouseUp(this);
   }
 }
