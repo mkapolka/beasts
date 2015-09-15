@@ -13,7 +13,7 @@ def rill_origin():
                 'type': 'rill_rider',
                 'song': 'tut bo boro'
             },
-            lambda: lurker('alligator', rider_id, 'bobo')]
+            lambda: lurker('rill_rider', rider_id, 'bobo')]
     }
 
 
@@ -268,7 +268,7 @@ maps = [
                     'right': 'start/'
                 }
             },
-            'l': lurker('spriggan_m', 'player', 'wo', absolute_lurker_id=True)
+            'l': lurker('you', 'player', 'wo', absolute_lurker_id=True)
         }
     },
     {

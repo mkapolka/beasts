@@ -364,7 +364,7 @@ def generate(maps):
                     n = adjacent
         watchers = [Beast('r') for b in rill_path]
         for n, watcher in enumerate(watchers):
-            watcher.sprite = 'water_dark'
+            watcher.sprite = 'rill'
             watcher.left = watchers[n - 1]
             watcher.right = watchers[n + 1] if n < len(watchers) - 1 else watchers[0]
             watcher.up = rill_path[n]

@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour {
   public Image leftImage;
   public Image rightImage;
   public Animator borderAnimator;
+  public GameObject eyeBall;
 
   public LeyLine playerLey;
 
@@ -146,6 +147,7 @@ public class GameManager : MonoBehaviour {
         this.moveTimer = GameManager.MOVE_TIME;
         this.lurkerBeast.Sing();
         this.PulseBorder();
+        this.PulsePlayerLey();
         this.RefreshScreen(true);
       }
     }
@@ -187,32 +189,15 @@ public class GameManager : MonoBehaviour {
     return null;
   }
 
-  public void ClickBorder(string which) {
-    switch (which) {
-      case "up":
-        this.playerBeast.Sing("tut wo bo");
-      break;
-      case "down":
-        this.playerBeast.Sing("tut wo po");
-      break;
-      case "left":
-        this.playerBeast.Sing("tut wo go");
-      break;
-      case "right":
-        this.playerBeast.Sing("tut wo ro");
-      break;
-    }
-
-    this.RefreshScreen(true);
-    this.PulseBorder();
-  }
-
   public void MouseOver(Beast.BeastLink link) {
     this.playerLey.MouseOverPath(link);
   }
 
   public void PulseBorder() {
     this.borderAnimator.SetTrigger("Pulse");
+  }
+
+  public void PulsePlayerLey() {
     this.playerLey.Pulse();
   }
 
@@ -228,5 +213,7 @@ public class GameManager : MonoBehaviour {
     foreach (Tile tile in GameObject.FindObjectsOfType<Tile>()) {
       tile.SetLeyLineEnabled(this.leyLinesActive);
     }
+    this.playerLey.gameObject.SetActive(this.leyLinesActive);
+    this.eyeBall.GetComponent<Animator>().SetBool("Enabled", this.leyLinesActive);
   }
 }

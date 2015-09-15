@@ -19,10 +19,10 @@ public class MouseController : MonoBehaviour {
   public Animator downHeartAnimator;
 
   private ClickState currentState = ClickState.Idle;
-  private Tile clickedTile;
-  private Tile overTile;
-  private Heart clickedHeart;
-  private Heart overHeart;
+  private Tile clickedTile = null;
+  private Tile overTile = null;
+  private Heart clickedHeart = Heart.None;
+  private Heart overHeart = Heart.None;
 
   public LeyLine GetPlayerLey() {
     return this.playerLey;
@@ -42,13 +42,11 @@ public class MouseController : MonoBehaviour {
       break;
 
       case ClickState.TileDown:
-        this.GetPlayerLey().ClearPath();
-        this.GetPlayerLey().AddTutPath(tile.link, this.clickedTile.link);
+        this.UpdateLey();
       break;
 
       case ClickState.HeartDown:
-        this.GetPlayerLey().ClearPath();
-        this.GetPlayerLey().AddToTutPath(tile.link);
+        this.UpdateLey();
       break;
     }
   }
@@ -84,15 +82,18 @@ public class MouseController : MonoBehaviour {
         this.overTile.link.set(this.clickedTile.link.get());
       }
       this.PulseBorder();
+      this.PulsePlayerLey();
       this.RefreshScreen();
     }
 
     if (this.overHeart != Heart.None) {
       this.GetHeartLink(this.overHeart).set(this.clickedTile.beast);
       this.PulseHeart(this.overHeart);
+      this.PulsePlayerLey();
       this.RefreshScreen();
     }
 
+    this.clickedTile = null;
     this.currentState = ClickState.Idle;
   }
 
@@ -133,6 +134,7 @@ public class MouseController : MonoBehaviour {
     this.overTile = null;
     this.GetHeartAnimator(stringToHeart(input)).SetBool("Visible", true);
     this.GetHeartAnimator(stringToHeart(input)).SetBool("Throbbing", true);
+    this.UpdateLey();
   }
 
   public void HeartMouseOut(string input) {
@@ -169,16 +171,62 @@ public class MouseController : MonoBehaviour {
         this.PulseHeart(this.overHeart);
       }
     }
+    this.PulsePlayerLey();
 
     this.currentState = ClickState.Idle;
+    this.clickedHeart = Heart.None;
     this.GetHeartAnimator(stringToHeart(input)).SetBool("Clenched", false);
+  }
+
+  public void UpdateLey() {
+    LeyLine playerLey = this.GetPlayerLey();
+    playerLey.ClearPath();
+
+    if (this.clickedTile) {
+      playerLey.AddFromTutPath(this.clickedTile.link);
+    }
+
+    if (this.overTile) {
+      playerLey.AddToTutPath(this.overTile.link);
+    }
+
+    if (this.clickedHeart != Heart.None) {
+      playerLey.AddFakeHeartPath(this.GetFakeHeartLinkPath(this.clickedHeart));
+    }
+
+    if (this.overHeart != Heart.None) {
+      playerLey.AddFakeHeartPath(this.GetFakeHeartLinkPath(this.overHeart));
+    }
   }
 
   public void PulseBorder() {
     GameObject.FindObjectOfType<GameManager>().PulseBorder();
   }
+  
+  public void PulsePlayerLey() {
+    GameObject.FindObjectOfType<GameManager>().PulsePlayerLey();
+  }
 
   public void RefreshScreen() {
-    GameObject.FindObjectOfType<GameManager>().RefreshScreen();
+    GameObject.FindObjectOfType<GameManager>().RefreshScreen(true);
+  }
+
+  public Beast.BeastLink GetFakeHeartLinkPath(Heart heart) {
+    string[] directions = null;
+    switch (heart) {
+      case Heart.Left:
+        directions = new string[]{"left", "left", "left", "left", "left", "left", "left"};
+      break;
+      case Heart.Right:
+        directions = new string[]{"right", "right", "right", "right", "right", "right", "right"};
+      break;
+      case Heart.Up:
+        directions = new string[]{"up", "up", "up", "up", "up", "up", "up"};
+      break;
+      case Heart.Down:
+        directions = new string[]{"down", "down", "down", "down", "down", "down", "down"};
+      break;
+    }
+    return new Beast.BeastLink(this.GetPlayer(), directions);
   }
 }

@@ -83,10 +83,18 @@ public class LeyLine : MonoBehaviour {
     this.AddPath(to, this.continueSprite, this.continueSprite, this.startSprite, this.startSprite);
   }
 
+  public void AddFromTutPath(Beast.BeastLink to) {
+    this.AddPath(to, this.continueSprite, this.continueSprite, this.endSprite, this.endSprite);
+  }
+
   public void AddIbiTutPath(Beast.BeastLink condA, Beast.BeastLink condB, Beast.BeastLink from, Beast.BeastLink to) {
     this.AddPath(condA, this.continueSprite, this.continueSprite, this.startSprite, this.startSprite);
     this.AddPath(condB, this.continueSprite, this.continueSprite, this.startSprite, this.startSprite);
     this.AddTutPath(from, to);
+  }
+
+  public void AddFakeHeartPath(Beast.BeastLink link) {
+    this.AddPath(link, this.continueSprite, this.continueSprite, this.continueSprite, this.continueSprite); 
   }
 
 	public void AddPath(Beast.BeastLink link, GameObject startSprite, GameObject continueSprite, GameObject endSprite, GameObject onlySprite = null) {
