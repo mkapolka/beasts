@@ -4,16 +4,42 @@ import uuid
 def rill_origin():
     rider_id = uuid.uuid4().hex
     return {
-        'sprite': 'water_light',
+        'sprite': 'rill_origin',
         'type': 'rill_origin',
         'also': [
             {
                 'id': rider_id,
-                'sprite': 'fire',
+                'sprite': 'rider_onto',
                 'type': 'rill_rider',
                 'song': 'tut bo boro'
             },
-            lambda: lurker('rill_rider', rider_id, 'bobo')]
+            lambda: lurker('rill_rider', rider_id, 'bobo')],
+        'innie': True,
+        'dimension': {
+            'data': [
+                'vvvvv',
+                'v###v',
+                'v#>#v',
+                'v###v',
+                'vvvvv',
+            ],
+            'wrap_mode': 'bounded',
+            'exits': '',
+            'legend': {
+                '#': {'sprite': 'stone'},
+                '_': {'sprite': 'water_dark'},
+                '>': {
+                    'sprite': 'water_dark',
+                    'stitches': {
+                        'right': '%s//r' % rider_id,
+                        'left': '%s//r' % rider_id,
+                        'up': '%s//r' % rider_id,
+                        'down': '%s//r' % rider_id,
+                    }
+                },
+                'v': {'sprite': 'darkness'}
+            }
+        },
     }
 
 

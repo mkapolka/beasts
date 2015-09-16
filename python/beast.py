@@ -8,6 +8,11 @@ class Beast(object):
         self.up = self
         self.down = self
         self.inner = self
+        self.orig_left = self
+        self.orig_right = self
+        self.orig_up = self
+        self.orig_down = self
+        self.orig_inner = self
         self.symbol = symbol
         self.id = uuid.uuid4().hex
         self.tick_speed = 1
@@ -30,6 +35,10 @@ class Beast(object):
         self.right = value
         self.up = value
         self.down = value
+
+    @property
+    def all_orig(self):
+        return [self.orig_up, self.orig_down, self.orig_left, self.orig_right, self.orig_inner]
 
     @property
     def from_below(self):

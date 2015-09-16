@@ -48,18 +48,30 @@ def tree():
 data = [
     {
         'data': [
-            '_____',
+            '^^^^^',
             '_t___',
             'e___t',
-            '_____',
-            '_t___',
+            '__t__',
+            'vvvvv',
         ],
         'legend': {
             '_': {
                 'sprite': 'leafs'
             },
             't': tree,
-            'e': {'id': 'tree_entrance', 'sprite': 'leafs'}
+            'e': {'id': 'tree_entrance', 'sprite': 'leafs'},
+            '^': {
+                'sprite': 'leafs',
+                'stitches': {
+                    'up': '/ur/r',
+                }
+            },
+            'v': {
+                'sprite': 'leafs',
+                'stitches': {
+                    'down': '/dl/r',
+                }
+            }
         },
         'wrap_mode': 'looped'
     },

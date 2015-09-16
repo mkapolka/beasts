@@ -357,7 +357,7 @@ def generate(maps):
         while n is not None:
             c = n
             n = None
-            for adjacent in c.all:
+            for adjacent in c.all_orig:
                 if adjacent in rills and adjacent not in rill_path:
                     rill_path.append(adjacent)
                     rills.remove(adjacent)
@@ -368,6 +368,7 @@ def generate(maps):
             watcher.left = watchers[n - 1]
             watcher.right = watchers[n + 1] if n < len(watchers) - 1 else watchers[0]
             watcher.up = rill_path[n]
+            watcher.down = rill_path[n]
             all_beasts[watcher.id] = watcher
         # Rill rider
         rill_rider = next(b for b in origin.also_beasts if b.type == 'rill_rider')
