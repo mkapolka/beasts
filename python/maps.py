@@ -1,5 +1,6 @@
 import inspect
 import collections
+import random
 import uuid
 
 
@@ -382,6 +383,26 @@ def generate(maps):
         for (x, y) in lurkmap.right_wall_points():
             lurkmap.get(x, y).right = previous_lurkmap.get(0, y)
             previous_lurkmap.get(0, y).left = lurkmap.get(x, y)
+
+    # THE GOLDEN RILL
+    golden_rill = []
+    shuffled_beasts = all_beasts.values()
+    random.shuffle(shuffled_beasts)
+    for beast in shuffled_beasts:
+        rill_segment = Beast('golden_rill')
+        rill_segment.sprite = 'golden_rill'
+        rill_segment.up = beast
+        rill_segment.down = beast
+        golden_rill.append(rill_segment)
+    for n, beast in enumerate(golden_rill):
+        left = golden_rill[n - 1]
+        beast.left = left
+        beast.left.right = beast
+
+    all_beasts['golden_rill_origin'].down = golden_rill[0]
+
+    for rill in golden_rill:
+        all_beasts[rill.id] = rill
 
     return all_beasts.values()
 

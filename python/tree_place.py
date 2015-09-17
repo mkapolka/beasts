@@ -1,3 +1,6 @@
+import random
+
+
 total_trees = 0
 total_canopies = 0
 
@@ -48,16 +51,14 @@ def tree():
 data = [
     {
         'data': [
-            '^^^^^',
-            '_t___',
-            'e___t',
-            '__t__',
-            'vvvvv',
+            '^^^^^^^^^^^^^^^^^^^^^^^',
+            '_______t_______________',
+            'e_____________________t',
+            '______________t________',
+            'vvvvvvvvvvvvvvvvvvvvvvv',
         ],
         'legend': {
-            '_': {
-                'sprite': 'leafs'
-            },
+            '_': lambda: {'sprite': 'leafs' if random.random() < .5 else 'bog'},
             't': tree,
             'e': {'id': 'tree_entrance', 'sprite': 'leafs'},
             '^': {
@@ -78,11 +79,19 @@ data = [
     {
         'data': [
             'vvvvvvv',
+            'v__b__v',
+            'v_____v',
             'v_____v',
             'v_c___v',
+            'v_____v',
+            'v_____v',
+            'v_____v',
             'v____cv',
             'v_____v',
-            'v_c___v',
+            'v___e_v',
+            'v_____v',
+            'v____}v',
+            'v_c__>v',
             'vvvvvvv',
         ],
         'legend': {
@@ -90,7 +99,101 @@ data = [
                 'sprite': 'slime'
             },
             'c': canopy_entrance,
-            'v': {'sprite': 'void'}
+            'v': {'sprite': 'void'},
+            'b': {
+                'sprite': 'boulder',
+                'type': 'teleporter',
+                'to_id': 'flower_entrance',
+            },
+            'e': {
+                'id': 'eagle_start',
+                'sprite': 'slime',
+            },
+            '>': {
+                'type': 'teleporter',
+                'to_id': 'eagle_head'
+            },
+            "}": {
+                'type': 'teleporter',
+                'to_id': 'eagle_inside_entrance'
+            }
         }
+    },
+    {  # The Eagle
+        'data': [
+            '<^>',
+            '<_>',
+            '<v>',
+            '###',
+            'lhu',
+            'rod',
+        ],
+        'legend': {
+            'h': {
+                'id': 'eagle_head',
+                'sprite': 'head',
+                'song': 'tut bo bobo',
+                'stitches': {
+                    'up': 'eagle_start/'
+                }
+            },
+            'o': {
+                'id': 'eagle_out',
+                'sprite': 'foot',
+                'type': 'alta',
+                'to_id': 'eagle_start',
+                'innie': True,
+                'dimension': {
+                    'data': [
+                        '___',
+                        '_e_',
+                        '___',
+                    ],
+                    'exits': 'lrud',
+                    'legend': {
+                        'e': {
+                            'id': 'eagle_inside_entrance',
+                            'absolute_id': True
+                        }
+                    }
+                }
+            },
+            'l': {
+                'id': 'eagle_left_syncer',
+                'sprite': 'glove',
+                'song': 'tut gogo robo',
+                'stitches': {
+                    'right': 'eagle_head/',
+                    'left': 'eagle_out/'
+                }
+            },
+            'r': {
+                'id': 'eagle_right_syncer',
+                'sprite': 'glove',
+                'song': 'tut roro gobo',
+                'stitches': {
+                    'right': 'eagle_out/',
+                    'left': 'eagle_head/'
+                }
+            },
+            'u': {
+                'id': 'eagle_up_syncer',
+                'sprite': 'glove',
+                'song': 'tut bobo pobo',
+                'stitches': {
+                    'up': 'eagle_out/',
+                    'down': 'eagle_head/'
+                }
+            },
+            'd': {
+                'id': 'eagle_down_syncer',
+                'sprite': 'glove',
+                'song': 'tut popo bobo',
+                'stitches': {
+                    'up': 'eagle_head//',
+                    'down': 'eagle_out//'
+                }
+            },
+        },
     }
 ]
