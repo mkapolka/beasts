@@ -740,5 +740,7 @@ maps = [
 ]
 
 from tree_place import data as tree_data
+from gold_place import data as gold_data
 
 maps.extend(tree_data)
+maps.extend(gold_data)

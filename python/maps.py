@@ -69,7 +69,7 @@ class BeastGrid(object):
             yield beast
 
 
-def init_beast(custom_data, id_prepend=''):
+def init_beast(custom_data, all_beasts, id_prepend=''):
     beast = Beast(custom_data.get('symbol', '?'))
     beast.id = uuid.uuid4().hex
 
@@ -82,6 +82,12 @@ def init_beast(custom_data, id_prepend=''):
         beast.id = '%s_%s' % (id_prepend, beast.id)
     beast.type = custom_data.get('type', None)
     beast.sprite = custom_data['sprite']
+    for beast_data in custom_data.get('also', []):
+        if inspect.isfunction(beast_data):
+            beast_data = beast_data()
+        also_beast = init_beast(beast_data, all_beasts, id_prepend)
+        all_beasts.append(also_beast)
+        beast.also_beasts.append(also_beast)
     return beast
 
 
@@ -105,16 +111,10 @@ def initialize_grid(map_data, id_prepend=''):
                 custom_data = custom_data()
             if 'sprite' not in custom_data:
                 custom_data['sprite'] = sprites.get(symbol, 'void')
-            beast = init_beast(custom_data, id_prepend)
+            beast = init_beast(custom_data, beast_map.extra_beasts, id_prepend)
             beast.x = x
             beast.y = y
             beast_map.set(x, y, beast)
-            for beast_data in custom_data.get('also', []):
-                if inspect.isfunction(beast_data):
-                    beast_data = beast_data()
-                also_beast = init_beast(beast_data, id_prepend)
-                beast_map.extra_beasts.append(also_beast)
-                beast.also_beasts.append(also_beast)
     for (x, y) in beast_map.all_points():
             beast = beast_map.get(x, y)
             beast.left = beast.orig_left = beast_map.get(x - 1, y)
@@ -217,10 +217,10 @@ def calc_stitch_string(beast, string, all_beasts):
     if len(parts) == 1:
         dirs = string
     elif len(parts) == 2:
-        current = all_beasts.get(parts[0], current)
+        current = all_beasts[parts[0]] if parts[0] else current
         dirs = parts[1]
     elif len(parts) == 3:
-        current = all_beasts.get(parts[0], current)
+        current = all_beasts[parts[0]] if parts[0] else current
         dirs = parts[1]
         flags = parts[2]
 
@@ -398,6 +398,9 @@ def generate(maps):
         left = golden_rill[n - 1]
         beast.left = left
         beast.left.right = beast
+
+    for rider in customs['golden_rill_rider']:
+        rider.up = random.choice(golden_rill)
 
     all_beasts['golden_rill_origin'].down = golden_rill[0]
 
