@@ -65,6 +65,11 @@ public class Tile : MonoBehaviour {
     if (beastChanged) {
       if (doAnimations) {
         StartCoroutine(this.DoAnimation(directions.Count, current, lastDirection));
+      } else {
+        this.oldSprite.sprite = current.sprite;
+        this.oldSprite.color = current.color;
+        this.newSprite.sprite = current.sprite;
+        this.newSprite.color = current.color;
       }
 
       this.link = new Beast.BeastLink(center, directions.ToArray());

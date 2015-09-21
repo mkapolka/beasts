@@ -34,6 +34,20 @@ public class GameManager : MonoBehaviour {
 
   private bool leyLinesActive = true;
 
+  public Sprite LoadSprite(string spriteName) {
+    if (spriteName.StartsWith("letter_")) {
+      Sprite[] letterSprites = Resources.LoadAll<Sprite>("alphabet");
+      foreach (Sprite sprite in letterSprites) {
+        if (sprite.name == "" + spriteName[spriteName.Length-1]) {
+          return sprite;
+        }
+      }
+    } else {
+      return Resources.Load<Sprite>(spriteName);
+    }
+    return null;
+  }
+
   public Beast LoadBeasts() {
     string data = Resources.Load<TextAsset>("output").text;
     string[] lines = data.Split('\n');
@@ -44,8 +58,7 @@ public class GameManager : MonoBehaviour {
       }
       string[] parts = line.Split(',');
       string id = parts[0];
-      string resource = parts[1];
-      Sprite sprite = Resources.Load<Sprite>(resource);
+      Sprite sprite = this.LoadSprite(parts[1]);
       Beast b = new Beast();
       b.sprite = sprite;
       this.beasts.Add(id, b);

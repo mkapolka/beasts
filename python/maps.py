@@ -98,20 +98,20 @@ def initialize_grid(map_data, id_prepend=''):
     height = len(md)
     width = len(md[0])
     beast_map = BeastGrid(width, height, map_data.get('wrap_mode', 'bounded'))
-    sprites = map_data.get('sprites', {
-        '_': 'grass',
-        '#': 'stone',
-        'default': 'bog'
-    })
     for y, line in enumerate(md):
         for x, char in enumerate(line):
             symbol = md[y][x]
-            custom_data = legend.get(symbol, {})
+            if symbol in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+                default_data = {
+                    'sprite': 'letter_%s' % symbol.lower()
+                }
+            else:
+                default_data = {'sprite': 'void'}
+            custom_data = legend.get(symbol, default_data)
             if inspect.isfunction(custom_data):
                 custom_data = custom_data()
-            if 'sprite' not in custom_data:
-                custom_data['sprite'] = sprites.get(symbol, 'void')
-            beast = init_beast(custom_data, beast_map.extra_beasts, id_prepend)
+            default_data.update(custom_data)
+            beast = init_beast(default_data, beast_map.extra_beasts, id_prepend)
             beast.x = x
             beast.y = y
             beast_map.set(x, y, beast)

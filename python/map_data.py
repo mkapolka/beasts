@@ -324,14 +324,15 @@ maps = [
             "########__t#############",
             "########__##############",
             "###_T_______T_##########",
-            "###_____X_____#####___##",
+            "###___HELLO___#####___##",
             "##b_________T_______p_##",
-            "###___________#####___##",
+            "###_____X_____#####___##",
             "###_T_T___T__m##########",
             "########d###############",
             "########################",
         ],
         'legend': {
+            '_': {'sprite': 'grass'},
             '#': {'type': 'wall', 'sprite': 'stone'},
             'b': {
                 'type': 'teleporter',
@@ -364,6 +365,9 @@ maps = [
             "##################",
         ],
         'legend': {
+            '_': {'sprite': 'cobble'},
+            '#': {'sprite': 'brick'},
+            'o': {'sprite': 'altar'},
             'a': {
                 'type': 'teleporter',
                 'id': 'apple',
@@ -375,17 +379,12 @@ maps = [
                 'to_id': 'hallway_right'
             },
             'r': {
+                'sprite': 'void',
                 'type': 'teleporter',
                 'id': 'rubbie',
                 'to_id': '1'
-            }
+            },
         },
-        'sprites': {
-            '#': 'brick',
-            '_': 'cobble',
-            'o': 'altar',
-            'default': 'bog'
-        }
     },
     {
         'data': [
@@ -419,19 +418,19 @@ maps = [
     },
     {
         'data': [
-            '1234567890',
+            'ABCDEFGHIJ',
         ],
         'legend': {
-            '1': alta('2', '1'),
-            '2': alta('3', '2'),
-            '3': alta('4', '3'),
-            '4': alta('5', '4'),
-            '5': alta('6', '5'),
-            '6': alta('7', '6'),
-            '7': alta('8', '7'),
-            '8': alta('9', '8'),
-            '9': alta('0', '9'),
-            '0': alta('rubbie', '0'),
+            'A': alta('2', '1'),
+            'B': alta('3', '2'),
+            'C': alta('4', '3'),
+            'D': alta('5', '4'),
+            'E': alta('6', '5'),
+            'F': alta('7', '6'),
+            'G': alta('8', '7'),
+            'H': alta('9', '8'),
+            'I': alta('0', '9'),
+            'J': alta('rubbie', '0'),
         }
     },
     {
@@ -480,19 +479,19 @@ maps = [
     },
     {  # Sinuous rills
         'data': [
-            '~~~~o~~~~~~~~o~r~~~~~~~~~~',
-            '~___r____f___r_r_________~',
-            '~e__r________r_r_rrrrrr__~',
-            '~___rrrrr_rrrr_rrr____r__~',
-            '~_______r_r______#=P=#r__~',
-            '~__rrrr_r_rrrr___|###/r__~',
-            '~__r__rrr____r___R###Gr__~',
-            '~_rr_____rrrrr___|###/rr_~',
-            '~_r_rrrr_r_______#-B-#_r_~',
-            '~_rrr__r_r_rrr_rrr____rr_~',
-            '~______r_r_r_r_r_r___rr__~',
-            'rrrrrrrr_rrr_r_r_r__rr___~',
-            '~~~~~~~~~~~~~r~r~o~~o~~~~~',
+            '~~~~~~~~~o~~~~~o~~~~~~~~o~r~~~~~~~~~~',
+            '~__BEHOLDr_____r____f___r_r_________~',
+            '~_rrrrrrrr_____r________r_r_rrrrrr__~',
+            '~erSINUOUS_____rrrrr_rrrr_rrr____r__~',
+            '~_rrrrrrr__________r_r______#=P=#r__~',
+            '~__RILLSr_____rrrr_r_rrrr___|###/r__~',
+            '~__rrrrrr_____r__rrr____r___1###Gr__~',
+            '~__r_____rrr_rr_____rrrrr___|###/rr_~',
+            '~__rrrrrrr_r_r_rrrr_r_______#-2-#_r_~',
+            '~__________r_rrr__r_r_rrr_rrr____rr_~',
+            '~__rrr_rrr_r______r_r_r_r_r_r___rr__~',
+            '~__r_rrr_rrr_rrrrrr_rrr_r_r_r__rr___~',
+            '~~~r~~~~~~~~~r~~~~~~~~~~r~r~o~~o~~~~~',
         ],
         'legend': {
             '~': {'sprite': 'water_light'},
@@ -501,7 +500,7 @@ maps = [
             '_': {'sprite': 'grass'},
             'f': mushroom_pocket,
             'e': {'id': 'flower_entrance', 'sprite': 'grass'},
-            'R': {
+            '1': {
                 'id': 'rill_red',
                 'sprite': 'fire',
                 'stitches': {
@@ -525,7 +524,7 @@ maps = [
                 'type': 'portal_extender',
                 'base_id': 'rill_green',
             },
-            'B': {
+            '2': {
                 'id': 'rill_blue',
                 'sprite': 'ice',
                 'stitches': {
