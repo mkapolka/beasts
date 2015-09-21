@@ -129,34 +129,34 @@ public class MouseController : MonoBehaviour {
     this.GetHeartAnimator(heart).SetTrigger("Pulse");
   }
 
-  public void HeartMouseOver(string input) {
-    this.overHeart = this.stringToHeart(input);
+  public void HeartMouseOver(Heart heart) {
+    this.overHeart = heart;
     this.overTile = null;
-    this.GetHeartAnimator(stringToHeart(input)).SetBool("Visible", true);
-    this.GetHeartAnimator(stringToHeart(input)).SetBool("Throbbing", true);
+    this.GetHeartAnimator(heart).SetBool("Visible", true);
+    this.GetHeartAnimator(heart).SetBool("Throbbing", true);
     this.UpdateLey();
   }
 
-  public void HeartMouseOut(string input) {
+  public void HeartMouseOut(Heart heart) {
     if (this.currentState != ClickState.HeartDown) {
-      this.GetHeartAnimator(stringToHeart(input)).SetBool("Visible", false);
+      this.GetHeartAnimator(heart).SetBool("Visible", false);
     }
-    this.GetHeartAnimator(stringToHeart(input)).SetBool("Throbbing", false);
+    this.GetHeartAnimator(heart).SetBool("Throbbing", false);
   }
 
-  public void HeartMouseDown(string input) {
+  public void HeartMouseDown(Heart heart) {
     this.currentState = ClickState.HeartDown;
-    this.clickedHeart = this.stringToHeart(input);
+    this.clickedHeart = heart;
     this.overTile = null;
-    this.GetHeartAnimator(stringToHeart(input)).SetBool("Clenched", true);
+    this.GetHeartAnimator(heart).SetBool("Clenched", true);
   }
 
-  public void HeartMouseUp(string input) {
+  public void HeartMouseUp(Heart heart) {
     if (this.overTile != null) {
       this.overTile.link.set(this.GetHeartLink(this.clickedHeart).get());
       this.RefreshScreen();
-      this.GetHeartAnimator(stringToHeart(input)).SetBool("Visible", false);
-      this.PulseHeart(stringToHeart(input));
+      this.GetHeartAnimator(heart).SetBool("Visible", false);
+      this.PulseHeart(heart);
     }
 
     if (this.overHeart != Heart.None) {
@@ -175,7 +175,7 @@ public class MouseController : MonoBehaviour {
 
     this.currentState = ClickState.Idle;
     this.clickedHeart = Heart.None;
-    this.GetHeartAnimator(stringToHeart(input)).SetBool("Clenched", false);
+    this.GetHeartAnimator(heart).SetBool("Clenched", false);
   }
 
   public void UpdateLey() {

@@ -54,13 +54,6 @@ public class Tile : MonoBehaviour {
     bool beastChanged = this.beast != current;
     this.beast = current;
 
-    if (beastChanged) {
-      this.oldSprite.sprite = this.newSprite.sprite;
-      this.oldSprite.color = this.newSprite.color;
-    }
-
-    this.newSprite.sprite = current.sprite;
-    this.newSprite.color = current.color;
     if (current.inner != current) {
       this.inner.sprite = current.inner.sprite;
       this.inner.color = current.inner.color;
@@ -68,28 +61,44 @@ public class Tile : MonoBehaviour {
       this.inner.sprite = null;
     }
 
+
     if (beastChanged) {
       if (doAnimations) {
-        switch (lastDirection) {
-          case "down":
-            this.GetComponent<Animator>().SetTrigger("DownFill");
-          break;
-          case "up":
-            this.GetComponent<Animator>().SetTrigger("UpFill");
-          break;
-          case "left":
-            this.GetComponent<Animator>().SetTrigger("LeftFill");
-          break;
-          case "right":
-            this.GetComponent<Animator>().SetTrigger("RightFill");
-          break;
-        }
+        StartCoroutine(this.DoAnimation(directions.Count, current, lastDirection));
       }
 
       this.link = new Beast.BeastLink(center, directions.ToArray());
       this.UpdateLeyLines();
     }
 
+  }
+
+  public IEnumerator DoAnimation(int distance, Beast newBeast, string direction) {
+    float time = distance * .05f;
+    while (time > 0) {
+      time -= Time.deltaTime;
+      yield return null;
+    }
+
+    this.oldSprite.sprite = this.newSprite.sprite;
+    this.oldSprite.color = this.newSprite.color;
+    this.newSprite.sprite = newBeast.sprite;
+    this.newSprite.color = newBeast.color;
+
+    switch (direction) {
+      case "down":
+        this.GetComponent<Animator>().SetTrigger("DownFill");
+      break;
+      case "up":
+        this.GetComponent<Animator>().SetTrigger("UpFill");
+      break;
+      case "left":
+        this.GetComponent<Animator>().SetTrigger("LeftFill");
+      break;
+      case "right":
+        this.GetComponent<Animator>().SetTrigger("RightFill");
+      break;
+    }
   }
 
   public void UpdateLeyLines() {
