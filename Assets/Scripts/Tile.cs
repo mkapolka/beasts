@@ -5,9 +5,11 @@ using System.Collections.Generic;
 public class Tile : MonoBehaviour {
 
   public Beast beast;
+  public Beast innerBeast;
   public SpriteRenderer newSprite;
   public SpriteRenderer oldSprite;
   public SpriteRenderer inner;
+  public SpriteRenderer oldInner;
   public LeyLine line;
 
   public Beast.BeastLink link;
@@ -52,15 +54,13 @@ public class Tile : MonoBehaviour {
     }
 
     bool beastChanged = this.beast != current;
+    bool innerChanged = this.innerBeast != current.inner;
+    this.innerBeast = current.inner;
     this.beast = current;
 
-    if (current.inner != current) {
-      this.inner.sprite = current.inner.sprite;
-      this.inner.color = current.inner.color;
-    } else {
-      this.inner.sprite = null;
+    if (innerChanged && !beastChanged) {
+      StartCoroutine(this.DoInnerAnimation(directions.Count, current.inner));
     }
-
 
     if (beastChanged) {
       if (doAnimations) {
@@ -75,7 +75,26 @@ public class Tile : MonoBehaviour {
       this.link = new Beast.BeastLink(center, directions.ToArray());
       this.UpdateLeyLines();
     }
+  }
 
+  public IEnumerator DoInnerAnimation(int distance, Beast newInnerBeast) {
+    float time = distance * .05f;
+    while (time > 0) {
+      time -= Time.deltaTime;
+      yield return null;
+    }
+
+    this.oldInner.sprite = this.inner.sprite;
+    this.oldInner.color = this.inner.color;
+
+    if (newInnerBeast != this.beast) {
+      this.inner.sprite = newInnerBeast.sprite;
+      this.inner.color = newInnerBeast.color;
+    } else {
+      this.inner.sprite = null;
+    }
+
+    this.GetComponent<Animator>().SetTrigger("InnerFill");
   }
 
   public IEnumerator DoAnimation(int distance, Beast newBeast, string direction) {
@@ -83,6 +102,13 @@ public class Tile : MonoBehaviour {
     while (time > 0) {
       time -= Time.deltaTime;
       yield return null;
+    }
+
+    if (newBeast.inner != newBeast) {
+      this.inner.sprite = newBeast.inner.sprite;
+      this.inner.color = newBeast.inner.color;
+    } else {
+      this.inner.sprite = null;
     }
 
     this.oldSprite.sprite = this.newSprite.sprite;
