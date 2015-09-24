@@ -323,7 +323,7 @@ maps = [
             "########__##############",
             "########__t#############",
             "########__##############",
-            "###_T_______T_##########",
+            "###CT_______T_##########",
             "###___HELLO___#####___##",
             "##b_________T_______p_##",
             "###_____X_____#####___##",
@@ -340,6 +340,7 @@ maps = [
                 'to_id': 'apple'
             },
             # '#': {'type': 'wall'},
+            'C': {'type': 'teleporter', 'to_id': 'castle_courtyard_entrance'},
             'X': {'id': 'start'},
             'd': teleporter('dookie', 'maze_entrance'),
             'q': teleporter('boob', 'zoomie'),
@@ -481,7 +482,7 @@ maps = [
         'data': [
             '#######################################',
             '#~~~~~~~~~o~~~~~o~~~~~~~~o~r~~~~~~~~~~#',
-            '#~__BEHOLDr_____r____f___r_r_________~#',
+            '#~__THE___r_____r____f___r_r_________~#',
             '#~_rrrrrrrr_____r________r_r_rrrrrr__~#',
             '#~erSINUOUS_____rrrrr_rrrr_rrr____r__~#',
             '#~_rrrrrrr__________r_r______#=P=#r__~#',
@@ -743,6 +744,8 @@ maps = [
 
 from tree_place import data as tree_data
 from gold_place import data as gold_data
+from castle_place import data as castle_data
 
 maps.extend(tree_data)
 maps.extend(gold_data)
+maps.extend(castle_data)

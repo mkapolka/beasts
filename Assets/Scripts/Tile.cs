@@ -58,8 +58,12 @@ public class Tile : MonoBehaviour {
     this.innerBeast = current.inner;
     this.beast = current;
 
-    if (innerChanged && !beastChanged) {
-      StartCoroutine(this.DoInnerAnimation(directions.Count, current.inner));
+    if (innerChanged) {
+      if (doAnimations) {
+        StartCoroutine(this.DoInnerAnimation(directions.Count, current.inner));
+      } else {
+        this.SetInnerBeastSprites(current.inner);
+      }
     }
 
     if (beastChanged) {
@@ -70,11 +74,25 @@ public class Tile : MonoBehaviour {
         this.oldSprite.color = current.color;
         this.newSprite.sprite = current.sprite;
         this.newSprite.color = current.color;
+
+        this.SetInnerBeastSprites(current.inner);
       }
 
       this.link = new Beast.BeastLink(center, directions.ToArray());
       this.UpdateLeyLines();
     }
+  }
+
+  private void SetInnerBeastSprites(Beast newInnerBeast) {
+      this.oldInner.sprite = this.inner.sprite;
+      this.oldInner.color = this.inner.color;
+
+      if (newInnerBeast != this.beast) {
+        this.inner.sprite = newInnerBeast.sprite;
+        this.inner.color = newInnerBeast.color;
+      } else {
+        this.inner.sprite = null;
+      }
   }
 
   public IEnumerator DoInnerAnimation(int distance, Beast newInnerBeast) {
@@ -104,12 +122,13 @@ public class Tile : MonoBehaviour {
       yield return null;
     }
 
-    if (newBeast.inner != newBeast) {
+    //this.SetInnerBeastSprites(newBeast.inner);
+    /*if (newBeast.inner != newBeast) {
       this.inner.sprite = newBeast.inner.sprite;
       this.inner.color = newBeast.inner.color;
     } else {
       this.inner.sprite = null;
-    }
+    }*/
 
     this.oldSprite.sprite = this.newSprite.sprite;
     this.oldSprite.color = this.newSprite.color;

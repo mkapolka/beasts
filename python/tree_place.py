@@ -157,25 +157,28 @@ data = [
                 'type': 'teleporter',
                 'to_id': 'eagle_head'
             },
-            "}": {
-                'type': 'teleporter',
-                'to_id': 'eagle_inside_entrance'
-            }
         }
     },
     {  # The Eagle
         'data': [
-            '<^>',
-            '<_>',
-            '<v>',
-            '#s#',
-            'lhu',
-            'rod',
+            '______h______',
+            'u###########d',
+            '___#######___',
+            '____#_#_#____',
+            '____l_#_r____',
+            '______#______',
+            '______s_____o',
         ],
         'legend': {
+            '#': {'sprite': 'feathers'},
+            '_': {
+                'sprite': 'darkness',
+                # 'type': 'alta',
+                # 'to_id': 'eagle_out'
+            },
             'h': {
                 'id': 'eagle_head',
-                'sprite': 'head',
+                'sprite': 'bird_head',
                 'song': 'tut bo bobo',
                 'stitches': {
                     'up': 'eagle_start/'
@@ -196,7 +199,7 @@ data = [
             },
             'o': {
                 'id': 'eagle_out',
-                'sprite': 'foot',
+                'sprite': 'bird_down',
                 'type': 'alta',
                 'to_id': 'eagle_start',
                 'innie': True,
