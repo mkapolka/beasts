@@ -323,7 +323,7 @@ maps = [
             "########__##############",
             "########__t#############",
             "########__##############",
-            "###CT_______T_##########",
+            "###CT_______Tw##########",
             "###___HELLO___#####___##",
             "##b_________T_______p_##",
             "###_____X_____#####___##",
@@ -354,6 +354,7 @@ maps = [
             'T': tree,
             'c': color_changer,
             't': teleporter(None, 'tree_entrance'),
+            'w': teleporter(None, 'town_entrance'),
             'm': {'id': 'golden_rill_origin'}
         }
     },
@@ -745,7 +746,9 @@ maps = [
 from tree_place import data as tree_data
 from gold_place import data as gold_data
 from castle_place import data as castle_data
+from town_place import data as town_data
 
 maps.extend(tree_data)
 maps.extend(gold_data)
 maps.extend(castle_data)
+maps.extend(town_data)

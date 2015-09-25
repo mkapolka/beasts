@@ -58,7 +58,7 @@ public class Tile : MonoBehaviour {
     this.innerBeast = current.inner;
     this.beast = current;
 
-    if (innerChanged) {
+    if (innerChanged && !beastChanged) {
       if (doAnimations) {
         StartCoroutine(this.DoInnerAnimation(directions.Count, current.inner));
       } else {
@@ -122,7 +122,7 @@ public class Tile : MonoBehaviour {
       yield return null;
     }
 
-    //this.SetInnerBeastSprites(newBeast.inner);
+    this.SetInnerBeastSprites(newBeast.inner);
     /*if (newBeast.inner != newBeast) {
       this.inner.sprite = newBeast.inner.sprite;
       this.inner.color = newBeast.inner.color;
@@ -135,20 +135,8 @@ public class Tile : MonoBehaviour {
     this.newSprite.sprite = newBeast.sprite;
     this.newSprite.color = newBeast.color;
 
-    switch (direction) {
-      case "down":
-        this.GetComponent<Animator>().SetTrigger("DownFill");
-      break;
-      case "up":
-        this.GetComponent<Animator>().SetTrigger("UpFill");
-      break;
-      case "left":
-        this.GetComponent<Animator>().SetTrigger("LeftFill");
-      break;
-      case "right":
-        this.GetComponent<Animator>().SetTrigger("RightFill");
-      break;
-    }
+    this.GetComponent<Animator>().SetTrigger("Fill");
+    this.GetComponent<Animator>().SetTrigger("InnerFill");
   }
 
   public void UpdateLeyLines() {

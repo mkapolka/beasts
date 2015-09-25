@@ -333,6 +333,7 @@ def generate(maps):
 
     for extender in customs['portal_extender']:
         base = all_beasts.get(extender.base_id)
+        reciprocal = getattr(extender, 'reciprocal', False)
         offset_x = base.x - extender.x
         offset_y = base.y - extender.y
         rel_string = ''
@@ -345,7 +346,7 @@ def generate(maps):
         if offset_y < 0:
             rel_string += 'd' * (offset_y * -1)
         for key in base.stitches.keys():
-            extender.stitches[key] = base.stitches[key] + rel_string
+            extender.stitches[key] = base.stitches[key] + rel_string + '/r' if reciprocal else ''
 
     for stitched in all_beasts.values():
         stitches = stitched.stitches
