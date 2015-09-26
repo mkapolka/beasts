@@ -1,6 +1,29 @@
 import uuid
 
 
+def nogo(sprite):
+    base_id = uuid.uuid4().hex
+    inner_id = uuid.uuid4().hex
+    return {
+        'id': base_id,
+        'absolute_id': True,
+        'sprite': sprite,
+        'also': [
+            {
+                'id': inner_id,
+                'absolute_id': True,
+                'sprite': 'glove',
+                'stitches': {
+                    'left': 'player_position_memory/',
+                    'right': '%s/' % base_id,
+                    'down': 'player/'
+                },
+                'song': 'ibi powo ro tut powo gobo'
+            }
+        ]
+    }
+
+
 def left_moat():
     return moat_entrance('')
 
@@ -111,10 +134,9 @@ data = [
         ],
         'wrap_mode': 'looped',
         'legend': {
-            '*': {
+            '*': lambda: dict(nogo('lava'), **{
                 'type': 'wall',
-                'sprite': 'lava'
-            },
+            }),
             '#': {'sprite': 'stone'},
             '_': {'sprite': 'wood'},
             '1': {

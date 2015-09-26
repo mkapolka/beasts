@@ -284,17 +284,30 @@ pocket_dimension = {
 
 maps = [
     {
-        'data': ['pl'],
+        'data': [
+            '_h_^',
+            'apal',
+            '_f__',
+        ],
         'legend': {
             'p': {
                 'id': 'player',
                 'sprite': 'ophan',
                 'stitches': {
                     'inner': 'start/',
+                    # 'right': 'start/'
+                }
+            },
+            'l': lurker('you', 'player', 'wo', reciprocate=False, absolute_lurker_id=True),
+            '^': {
+                'stitches': {
+                    'up': 'start/',
                     'right': 'start/'
                 }
             },
-            'l': lurker('you', 'player', 'wo', absolute_lurker_id=True)
+            'h': {'sprite': 'head'},
+            'a': {'sprite': 'glove'},
+            'f': {'sprite': 'foot'}
         }
     },
     {
@@ -497,6 +510,7 @@ maps = [
             '#~~~r~~~~~~~~~r~~~~~~~~~~r~r~o~~o~~~~~#',
             '#######################################',
         ],
+        'wrap_mode': 'looped',
         'legend': {
             '#': {'sprite': 'grass'},
             '~': {'sprite': 'grass'},
@@ -739,6 +753,38 @@ maps = [
                     'up': 'triangle_bottom/'
                 }
             }
+        }
+    },
+    {  # Player location memory place
+        'data': [
+            '>--|'
+        ],
+        'legend': {
+            '>': {
+                'stitches': {
+                    'left': 'player/'
+                },
+                'song': 'bib gowo bo tut bo gowo'
+            },
+            '-': {
+                'song': 'tut bo gobo'
+            },
+            '|': {
+                'id': 'player_position_memory',
+                'song': 'tut bo gobo'
+            }
+        }
+    },
+    {
+        'data': [
+            '_________',
+            '_YOU_ARE_',
+            '__@DEAD__',
+            '_________',
+        ],
+        'legend': {
+            '_': {'sprite': 'darkness'},
+            '@': {'id': 'hell', 'sprite': 'darkness'}
         }
     }
 ]
