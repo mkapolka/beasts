@@ -1,4 +1,5 @@
 import uuid
+from town_place import dialog
 
 
 def rill_origin():
@@ -494,168 +495,40 @@ maps = [
     },
     {  # Sinuous rills
         'data': [
-            '#######################################',
-            '#~~~~~~~~~o~~~~~o~~~~~~~~o~r~~~~~~~~~~#',
-            '#~__THE___r_____r____f___r_r_________~#',
-            '#~_rrrrrrrr_____r________r_r_rrrrrr__~#',
-            '#~erSINUOUS_____rrrrr_rrrr_rrr____r__~#',
-            '#~_rrrrrrr__________r_r______#=P=#r__~#',
-            '#~__RILLSr_____rrrr_r_rrrr___|###/r__~#',
-            '#~__rrrrrr_____r__rrr____r___1###Gr__~#',
-            '#~__r_____rrr_rr_____rrrrr___|###/rr_~#',
-            '#~__rrrrrrr_r_r_rrrr_r_______#-2-#_r_~#',
-            '#~__________r_rrr__r_r_rrr_rrr____rr_~#',
-            '#~__rrr_rrr_r______r_r_r_r_r_r___rr__~#',
-            '#~__r_rrr_rrr_rrrrrr_rrr_r_r_r__rr___~#',
-            '#~~~r~~~~~~~~~r~~~~~~~~~~r~r~o~~o~~~~~#',
-            '#######################################',
+            'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',
+            'T~~~~~~~~~o~~~~~o~~~~~~~~o~r~~~~~~~~~~T',
+            'T~__BEHOLDr__f__r____f___r_r_________~T',
+            'T~_rrrrrrrr_____r________r_r_rrrrrr__~T',
+            'T~erSINUOUS_____rrrrr_rrrr_rrr____r__~T',
+            'T~_rrrrrrr__________r_r_______###_r__~T',
+            'T~__RILLSr_____rrrr_r_rrrr____###_r__~T',
+            'T~__rrrrrr_____r__rrr____r___1###_r__~T',
+            'T~__r_____rrr_rr_____rrrrr___p#^#_rr_~T',
+            'T~__rrrrrrr_r_r_rrrr_r_____________r_~T',
+            'T~__________r_rrr__r_r_rrr_rrr____rr_~T',
+            'T~__rrr_rrr_r______r_r_r_r_r_r___rr__~T',
+            'T~__r_rrr_rrr_rrrrrr_rrr_r_r_r__rr___~T',
+            'T~~~r~~~~~~~~~r~~~~~~~~~~r~r~o~~o~~~~~T',
+            'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',
         ],
-        'wrap_mode': 'looped',
         'legend': {
-            '#': {'sprite': 'grass'},
+            'T': {'sprite': 'tree'},
+            '#': {'sprite': 'stone'},
             '~': {'sprite': 'grass'},
             'r': {'sprite': 'water_light', 'type': 'rill'},
             'o': rill_origin,
             '_': {'sprite': 'grass'},
             'f': mushroom_pocket,
             'e': {'id': 'flower_entrance', 'sprite': 'grass'},
-            '1': {
-                'id': 'rill_red',
-                'sprite': 'fire',
-                'stitches': {
-                    'right': 'red_room_entrance/'
-                }
+            'p': {
+                'sprite': 'rando'
             },
-            '|': {
-                'sprite': 'fire',
-                'type': 'portal_extender',
-                'base_id': 'rill_red'
-            },
-            'G': {
-                'id': 'rill_green',
-                'sprite': 'poison',
-                'stitches': {
-                    'left': 'green_room_entrance/'
-                }
-            },
-            '/': {
-                'sprite': 'poison',
-                'type': 'portal_extender',
-                'base_id': 'rill_green',
-            },
-            '2': {
-                'id': 'rill_blue',
-                'sprite': 'ice',
-                'stitches': {
-                    'up': 'blue_room_entrance/'
-                }
-            },
-            '-': {
-                'sprite': 'ice',
-                'type': 'portal_extender',
-                'base_id': 'rill_blue'
-            },
-            'P': {
-                'id': 'rill_purple',
-                'sprite': 'purple',
-                'stitches': {
-                    'down': 'purple_room_entrance/'
-                }
-            },
-            '=': {
-                'sprite': 'purple',
-                'type': 'portal_extender',
-                'base_id': 'rill_purple'
-            },
-        }
-    },
-    {  # Within the rillstone
-        'data': [
-            '######################',
-            '#########=P=##########',
-            '#########ppp##########',
-            '#########ppp##########',
-            '##########p###########',
-            '##########p###########',
-            '##########p###########',
-            '##########p###########',
-            '##########_###########',
-            '|rr######____######gg/',
-            'Rrrrrrrr__t___gggggggG',
-            '|rr#######___######gg/',
-            '###########_##########',
-            '###########b##########',
-            '###########b##########',
-            '###########b##########',
-            '##########bbb#########',
-            '##########bbb#########',
-            '##########-B-#########',
-        ],
-        'legend': {
-            '_': {
-                'sprite': 'cobble'
-            },
-            '#': {
-                'sprite': 'darkness',
-                'type': 'wall'
-            },
-            'r': {'sprite': 'fire'},
-            'R': {
-                'id': 'red_room_entrance',
-                'sprite': 'fire',
-                'stitches': {
-                    'left': 'rill_red/'
-                }
-            },
-            '|': {
-                'sprite': 'fire',
-                'type': 'portal_extender',
-                'base_id': 'red_room_entrance',
-            },
-            'g': {'sprite': 'poison'},
-            'G': {
-                'id': 'green_room_entrance',
-                'sprite': 'poison',
-                'stitches': {
-                    'right': 'rill_green/'
-                }
-            },
-            '/': {
-                'sprite': 'poison',
-                'type': 'portal_extender',
-                'base_id': 'green_room_entrance',
-            },
-            'b': {'sprite': 'ice'},
-            'B': {
-                'id': 'blue_room_entrance',
-                'sprite': 'ice',
-                'stitches': {
-                    'down': 'rill_blue/',
-                }
-            },
-            '-': {
-                'sprite': 'ice',
-                'type': 'portal_extender',
-                'base_id': 'blue_room_entrance'
-            },
-            'p': {'sprite': 'purple'},
-            'P': {
-                'id': 'purple_room_entrance',
-                'sprite': 'purple',
-                'stitches': {
-                    'up': 'rill_purple/',
-                }
-            },
-            '=': {
-                'sprite': 'purple',
-                'type': 'portal_extender',
-                'base_id': 'purple_room_entrance'
-            },
-            't': {
-                'sprite': 'boulder',
+            '1': dialog(["GOOD", "LUCK"]),
+            '^': {
+                'sprite': 'door',
                 'type': 'teleporter',
-                'to_id': 'tree_entrance'
-            },
+                'to_id': 'wizard_inside'
+            }
         }
     },
     {
@@ -793,8 +666,10 @@ from tree_place import data as tree_data
 from gold_place import data as gold_data
 from castle_place import data as castle_data
 from town_place import data as town_data
+from wizard_place import data as wizard_data
 
 maps.extend(tree_data)
 maps.extend(gold_data)
 maps.extend(castle_data)
 maps.extend(town_data)
+maps.extend(wizard_data)
