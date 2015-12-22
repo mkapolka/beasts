@@ -1,5 +1,6 @@
-import inspect
 import collections
+import inspect
+import math
 import random
 import uuid
 
@@ -10,11 +11,12 @@ from map_data import maps
 
 
 class BeastGrid(object):
-    def __init__(self, width, height, wrap_mode='bounded'):
+    def __init__(self, width, height, wrap_mode='bounded', stitches={}):
         self.beasts = [[None for _ in range(0, height)] for _ in range(0, width)]
         self.width = width
         self.height = height
         self.wrap_mode = wrap_mode
+        self.stitches = stitches
         self.extra_beasts = []
 
     def get(self, x, y):
@@ -97,7 +99,8 @@ def initialize_grid(map_data, id_prepend=''):
 
     height = len(md)
     width = len(md[0])
-    beast_map = BeastGrid(width, height, map_data.get('wrap_mode', 'bounded'))
+    beast_map = BeastGrid(width, height, map_data.get('wrap_mode', 'bounded'), map_data.get('stitches', {}))
+    beast_map.id = map_data.get('id', '')
     for y, line in enumerate(md):
         for x, char in enumerate(line):
             symbol = md[y][x]
@@ -236,48 +239,53 @@ def calc_stitch_string(beast, string, all_beasts):
     return current, flags
 
 
+def get_reciprocal(direction):
+    return {
+        'left': 'right',
+        'right': 'left',
+        'up': 'down',
+        'down': 'up',
+        'inner': 'inner'
+    }[direction]
+
+
 def stitch(beast, all_beasts, up_string='', down_string='', left_string='', right_string='', inner_string=''):
+    def __do_stitch_flags(beast, flags, direction, other):
+        if flags == 'r':
+            setattr(getattr(beast, direction), get_reciprocal(direction), beast)
+        if flags == 'c':
+            setattr(getattr(beast, 'orig_%s' % direction), get_reciprocal(direction), getattr(beast, 'orig_%s' % direction))
+        if flags == 'o':
+            setattr(getattr(beast, 'orig_%s' % get_reciprocal(direction)), direction, other)
+
+    # flags... r = reciprocal, c = close?
+    # o = outie, my left stitch applies to my right's left instead
     up, ur = calc_stitch_string(beast, up_string, all_beasts) if up_string else (beast.up, False)
     down, dr = calc_stitch_string(beast, down_string, all_beasts) if down_string else (beast.down, False)
     left, lr = calc_stitch_string(beast, left_string, all_beasts) if left_string else (beast.left, False)
     right, rr = calc_stitch_string(beast, right_string, all_beasts) if right_string else (beast.right, False)
     inner, ir = calc_stitch_string(beast, inner_string, all_beasts) if inner_string else (beast.inner, False)
+
     beast.up = up
     beast.down = down
     beast.left = left
     beast.right = right
     beast.inner = inner
-    if ur == 'r':
-        beast.up.down = beast
-    elif ur == 'c':
-        beast.orig_up.down = beast.orig_up
 
-    if dr == 'r':
-        beast.down.up = beast
-    elif dr == 'c':
-        beast.orig_down.up = beast.orig_down
-
-    if lr == 'r':
-        beast.left.right = beast
-    elif lr == 'c':
-        beast.orig_left.right = beast.orig_left
-
-    if rr == 'r':
-        beast.right.left = beast
-    elif rr == 'c':
-        beast.orig_right.left = beast.orig_right
-
-    if ir == 'r':
-        beast.inner.inner = beast
-    elif ir == 'c':
-        beast.orig_inner.inner = beast.orig_inner
+    __do_stitch_flags(beast, ur, 'up', up)
+    __do_stitch_flags(beast, dr, 'down', down)
+    __do_stitch_flags(beast, lr, 'left', left)
+    __do_stitch_flags(beast, rr, 'right', right)
+    __do_stitch_flags(beast, ir, 'inner', inner)
 
 
 def generate(maps):
     customs = collections.defaultdict(list)
     all_beasts = {}
+    all_maps = []
     for map_data in maps:
         beast_map = initialize_grid(map_data)
+        all_maps.append(beast_map)
         for beast in beast_map.all_beasts():
             all_beasts[beast.id] = beast
             if beast.type:
@@ -352,6 +360,32 @@ def generate(maps):
         stitches = stitched.stitches
         if stitches:
             stitch(stitched, all_beasts, stitches.get('up', ''), stitches.get('down', ''), stitches.get('left', ''), stitches.get('right', ''), stitches.get('inner', ''))
+
+    # Stitch up the levels that have stitched borders
+    for level in all_maps:
+        if level.wrap_mode == 'stitched':
+            for direction, other_map in level.stitches.items():
+                points = []
+                other_points = []
+                other_map = [m for m in all_maps if m.id == other_map][0]
+                if direction == 'left':
+                    points = level.left_wall_points()
+                    other_points = other_map.right_wall_points()
+                if direction == 'right':
+                    points = level.right_wall_points()
+                    other_points = other_map.left_wall_points()
+                if direction == 'up':
+                    points = level.up_wall_points()
+                    other_points = other_map.down_wall_points()
+                if direction == 'down':
+                    points = level.down_wall_points()
+                    other_points = other_map.up_wall_points()
+                points = sorted(points)
+                other_points = sorted(other_points)
+                for i, point in enumerate(points):
+                    other_i = int(math.floor(i * (len(points) / len(other_points))))
+                    setattr(level.get(*point), direction, other_map.get(*other_points[other_i]))
+
     for origin in customs['rill_origin']:
         rills = customs['rill']
         rill_path = [origin]

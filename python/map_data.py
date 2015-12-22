@@ -355,7 +355,7 @@ maps = [
             },
             # '#': {'type': 'wall'},
             'C': {'type': 'teleporter', 'to_id': 'castle_courtyard_entrance'},
-            'X': {'id': 'start'},
+            # 'X': {'id': 'start'},
             'd': teleporter('dookie', 'maze_entrance'),
             'q': teleporter('boob', 'zoomie'),
             'p': {
