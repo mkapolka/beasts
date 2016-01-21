@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Tile : MonoBehaviour {
 
+  private static Tile[,] tiles = new Tile[20,20];
+
   public Beast beast;
   public Beast innerBeast;
   public SpriteRenderer newSprite;
@@ -12,10 +14,25 @@ public class Tile : MonoBehaviour {
   public SpriteRenderer oldInner;
   public LeyLine line;
 
+  public GameObject topEdge;
+  public GameObject bottomEdge;
+  public GameObject rightEdge;
+  public GameObject leftEdge;
+
   public Beast.BeastLink link;
+
+  public bool edgy;
 
   public void Start() {
     //this.SetLeyLineVisibility(false);
+    int x = (int)this.transform.position.x + 5;
+    int y = (int)this.transform.position.y + 5;
+    tiles[x,y] = this;
+
+    this.leftEdge.SetActive(false);
+    this.rightEdge.SetActive(false);
+    this.topEdge.SetActive(false);
+    this.bottomEdge.SetActive(false);
   }
 
   public void Render(Beast center, bool doAnimations = false) {
@@ -83,6 +100,69 @@ public class Tile : MonoBehaviour {
     }
   }
 
+  public void RenderEdges() {
+    this.leftEdge.SetActive(false);
+    this.rightEdge.SetActive(false);
+    this.topEdge.SetActive(false);
+    this.bottomEdge.SetActive(false);
+
+    string lastDirection = "";
+    /*string lastDirection = this.link.getLastDirection();
+    try {
+      lastDirection = Utils.GetReciprocalDirection(lastDirection);
+    } catch (System.Exception) {
+      //
+    }*/
+
+    if (this.GetNeighbor("left") != null && this.GetNeighbor("left").beast != this.beast && lastDirection != "left") {
+      this.leftEdge.SetActive(!this.IsEdgeReciprocal("left"));
+    }
+    if (this.GetNeighbor("right") != null && this.GetNeighbor("right").beast != this.beast && lastDirection != "right") {
+      this.rightEdge.SetActive(!this.IsEdgeReciprocal("right"));
+    }
+    if (this.GetNeighbor("up") != null && this.GetNeighbor("up").beast != this.beast && lastDirection != "up") {
+      this.topEdge.SetActive(!this.IsEdgeReciprocal("up"));
+    }
+    if (this.GetNeighbor("down") != null && this.GetNeighbor("down").beast != this.beast && lastDirection != "down") {
+      this.bottomEdge.SetActive(!this.IsEdgeReciprocal("down"));
+    }
+  }
+
+  public Tile GetNeighbor(string edge) {
+    int x = (int)this.transform.position.x + 5;
+    int y = (int)this.transform.position.y + 5;
+    switch (edge) {
+      case "left":
+        x -= 1;
+      break;
+      case "right":
+        x += 1;
+      break;
+      case "up":
+        y += 1;
+      break;
+      case "down":
+        y -= 1;
+      break;
+    }
+
+    try {
+      return tiles[x,y];
+    } catch (System.IndexOutOfRangeException) {
+      return null;
+    }
+  }
+
+  public bool IsEdgeReciprocal(string edge) {
+    Beast actualNeighbor = this.beast.GetNeighbor(edge);
+    Tile otherTile = GetNeighbor(edge);
+    if (otherTile != null) {
+      Beast tileNeighbor = otherTile.beast;
+      return tileNeighbor == actualNeighbor;
+    }
+    return false;
+  }
+
   private void SetInnerBeastSprites(Beast newInnerBeast) {
       this.oldInner.sprite = this.inner.sprite;
       this.oldInner.color = this.inner.color;
@@ -137,6 +217,10 @@ public class Tile : MonoBehaviour {
 
     this.GetComponent<Animator>().SetTrigger("Fill");
     this.GetComponent<Animator>().SetTrigger("InnerFill");
+
+    if (this.edgy) {
+      this.RenderEdges();
+    }
   }
 
   public void UpdateLeyLines() {

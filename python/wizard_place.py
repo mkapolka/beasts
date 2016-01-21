@@ -32,26 +32,98 @@ def fireball_spawner():
         ]
     }
 
+to_orb_stitches = {
+    'left': 'orb_pedestal/l',
+    'right': 'orb_pedestal/r',
+    'up': 'orb_pedestal/u',
+    'down': 'orb_pedestal/d',
+}
+
 data = [
+    {
+        'id': 'orb_room',
+        'data': [
+            '       ',
+            ' ##v## ',
+            ' ##### ',
+            ' ##o## ',
+            ' ##### ',
+            ' ##### ',
+            '       ',
+        ],
+        'legend': {
+            '#': {'sprite': 'cobble'},
+            ' ': {'sprite': 'void'},
+            'o': {
+                'id': 'orb_pedestal',
+                'sprite': 'orb_red'
+            },
+            'v': {
+                'sprite': 'head',
+                'stitches': {
+                    'down': 'orb_mechanics/'
+                }
+            }
+        }
+    },
+    {
+        'data': [
+            '****_s',
+            '<>^v__',
+            '~~~~~~',
+            'roygbp',
+        ],
+        'wrap_mode': 'wrapped',
+        'legend': {
+            's': {'id': 'orb_mechanics'},
+            '~': {'sprite': 'rill'},
+            'r': {'sprite': 'orb_red', 'stitches': to_orb_stitches},
+            'o': {'sprite': 'orb_orange', 'stitches': to_orb_stitches},
+            'y': {'sprite': 'orb_yellow', 'stitches': to_orb_stitches},
+            'g': {'sprite': 'orb_green', 'stitches': to_orb_stitches},
+            'b': {'sprite': 'orb_blue', 'stitches': to_orb_stitches},
+            'p': {'sprite': 'orb_purple', 'stitches': to_orb_stitches},
+            '*': {
+                'sprite': 'foot',
+                'song': 'tut popo poporo'
+            },
+            '>': {
+                'sprite': 'glove',
+                'song': 'tut roro popo',
+                'stitches': {'right': 'orb_pedestal/l', 'down': 'dl'}
+            },
+            '<': {
+                'sprite': 'glove',
+                'song': 'tut rogo popo',
+                'stitches': {'right': 'orb_pedestal/r', 'down': 'd'}
+            },
+            '^': {
+                'sprite': 'glove',
+                'song': 'tut robo popo',
+                'stitches': {'right': 'orb_pedestal/d', 'down': 'dll'}
+            },
+            'v': {
+                'sprite': 'glove',
+                'song': 'tut ropo popo',
+                'stitches': {'right': 'orb_pedestal/u', 'down': 'dlll'}
+            }
+        }
+    },
     {
         'id': 'wizpock_2',
         'wrap_mode': 'stitched',
         'stitches': {
-            'up': 'wizpock_1',
+            'up': 'orb_room',
             'down': 'wizpock_1',
             'left': 'wizpock_1',
             'right': 'wizpock_1',
         },
         'data': [
-            '#########',
-            '#~~_____#',
-            '#_~~~___#',
-            '#___~~~~#',
-            '#___@__~#',
-            '#_____~~#',
-            '#_~~~~~_#',
-            '#~~_____#',
-            '#########',
+            '#####',
+            '#___#',
+            '#_@_#',
+            '#___#',
+            '#####',
         ],
         'legend': {
             '#': {'sprite': 'wood'},
@@ -90,10 +162,10 @@ data = [
             '#########'
         ],
         'legend': {
-            's': {'id': 'start'},
+            # 's': {'id': 'start'},
             '!': {'sprite': 'golden_wall'},
-            '#': {'sprite': 'stone'},
-            '_': {'sprite': 'cobble'},
+            '#': {'sprite': 'ice_brick'},
+            '_': {'sprite': 'tile'},
             '@': {
                 'id': 'wizpock_center',
                 'sprite': 'cobble',

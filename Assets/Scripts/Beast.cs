@@ -38,6 +38,33 @@ public class Beast {
     }
   }
 
+  public Beast GetNeighbor(string direction) {
+    switch (direction) {
+      case "left":
+        return this.left;
+      break;
+      case "right":
+        return this.right;
+      break;
+      case "up":
+        return this.up;
+      break;
+      case "down":
+        return this.down;
+      break;
+      case "inner":
+        return this.inner;
+      break;
+    }
+    throw new System.Exception("Not a valid direction");
+  }
+
+  public bool IsEdgeReciprocal(string edge) {
+    Beast neighbor = this.GetNeighbor(edge);
+    Beast n2eighbor = neighbor.GetNeighbor(Utils.GetReciprocalDirection(edge));
+    return neighbor == n2eighbor;
+  }
+
   public class BeastLink {
     public Beast origin;
     public Beast beast;
@@ -50,11 +77,16 @@ public class Beast {
     }
 
     public string getLastDirection() {
-      return this.directions[this.directions.Length - 1];
+      if (this.directions.Length > 0) {
+        return this.directions[this.directions.Length - 1];
+      } else {
+        return "self";
+      }
     }
 
     private void populateBeast() {
       Beast start = this.origin;
+      this.beast = start;
       foreach (string direction in this.directions) {
         this.beast = start;
         start = this.hop(start, direction);

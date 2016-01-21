@@ -383,6 +383,7 @@ def generate(maps):
                 points = sorted(points)
                 other_points = sorted(other_points)
                 for i, point in enumerate(points):
+                    i = float(i) / len(points)
                     other_i = int(math.floor(i * (len(points) / len(other_points))))
                     setattr(level.get(*point), direction, other_map.get(*other_points[other_i]))
 

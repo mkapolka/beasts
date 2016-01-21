@@ -79,6 +79,7 @@ public class MouseController : MonoBehaviour {
       if (this.clickedTile == this.overTile) {
         this.GetPlayer().inner = this.overTile.beast;
       } else {
+        Debug.Log(this.clickedTile.link.origin);
         this.overTile.link.set(this.clickedTile.link.get());
       }
       this.PulseBorder();
